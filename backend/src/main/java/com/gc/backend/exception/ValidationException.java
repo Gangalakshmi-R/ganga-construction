@@ -1,0 +1,5 @@
+package com.gc.backend.exception;
+
+public class ValidationException {
+    
+}
