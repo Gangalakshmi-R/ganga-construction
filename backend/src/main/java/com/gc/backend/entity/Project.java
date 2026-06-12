@@ -2,11 +2,15 @@ package com.gc.backend.entity;
 
 import java.time.LocalDate;
 
-import com.gc.backend.entity.enums.ProjectCategory;
-import com.gc.backend.entity.enums.ProjectStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.gc.backend.enums.ProjectCategory;
+import com.gc.backend.enums.ProjectStatus;
 
 import jakarta.persistence.*;
+
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "projects")
@@ -21,9 +25,11 @@ public class Project extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String projectName;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ProjectCategory category;
 
     private String location;
@@ -43,4 +49,23 @@ public class Project extends BaseEntity {
     private String description;
 
     private String thumbnailUrl;
+
+  @JsonIgnore
+
+@OneToMany(
+        mappedBy = "project",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+)
+private List<ProjectImage> images;
+
+@JsonIgnore
+
+@OneToMany(
+        mappedBy = "project",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+)
+private List<ProjectVideo> videos;
+
 }
