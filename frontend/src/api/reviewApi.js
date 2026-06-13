@@ -1,13 +1,16 @@
+
 import axios from "axios";
 
 const API =
-  "http://localhost:8080/api/reviews";
+  import.meta.env.VITE_API_BASE_URL;
 
 export const getAllReviews =
   async () => {
 
     const response =
-      await axios.get(API);
+      await axios.get(
+        `${API}/api/reviews`
+      );
 
     return response.data;
 };
@@ -17,7 +20,7 @@ export const createReview =
 
     const response =
       await axios.post(
-        API,
+        `${API}/api/reviews`,
         reviewData
       );
 
@@ -28,6 +31,6 @@ export const deleteReview =
   async (id) => {
 
     await axios.delete(
-      `${API}/${id}`
+      `${API}/api/reviews/${id}`
     );
 };

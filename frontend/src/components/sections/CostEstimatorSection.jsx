@@ -49,11 +49,16 @@ function CostEstimatorSection() {
 
       setLoading(true);
 
-      const response =
-        await axios.post(
-          "http://localhost:8080/api/cost-estimations",
-          formData
-        );
+    
+const API = import.meta.env.VITE_API_BASE_URL;
+
+const response =
+  await axios.post(
+    `${API}/api/cost-estimations`,
+    formData
+  );
+
+
 
       setEstimatedCost(
         response.data.estimatedCost
