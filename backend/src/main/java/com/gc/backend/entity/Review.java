@@ -17,8 +17,7 @@ public class Review extends BaseEntity {
 
     @Id
     @GeneratedValue(
-        strategy =
-        GenerationType.IDENTITY
+        strategy = GenerationType.IDENTITY
     )
     private Long id;
 
@@ -28,6 +27,7 @@ public class Review extends BaseEntity {
     private String role;
 
     @Column(
+        name = "review_message",
         columnDefinition = "TEXT"
     )
     private String review;
