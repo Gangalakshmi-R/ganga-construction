@@ -26,7 +26,10 @@ public class Review extends BaseEntity {
 
     private String role;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(
+        name = "review_message",
+        columnDefinition = "TEXT"
+    )
     private String review;
 
     private Integer rating;
