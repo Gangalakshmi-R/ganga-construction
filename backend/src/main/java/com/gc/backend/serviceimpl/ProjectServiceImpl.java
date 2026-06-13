@@ -32,64 +32,59 @@ public class ProjectServiceImpl
             fileUploadUtil;
 
 @Override
-
 public Project createProject(
 
         String projectName,
-
         String category,
-
         String location,
-
         Double areaSqft,
-
         Double budget,
-
         String startDate,
-
         String completionDate,
-
         String status,
-
         String description,
-
         MultipartFile image) {
 
     String imageUrl =
             fileUploadUtil.uploadFile(image);
 
-    Project project =
-            new Project();
+    Project project = new Project();
 
-    project.setProjectName(
-            projectName);
+    project.setProjectName(projectName);
 
     project.setCategory(
             ProjectCategory.valueOf(
-                    category));
+                    category.toUpperCase()
+            )
+    );
 
-    project.setLocation(
-            location);
+    project.setLocation(location);
 
-    project.setAreaSqft(
-            areaSqft);
+    project.setAreaSqft(areaSqft);
 
-    project.setBudget(
-            budget);
+    project.setBudget(budget);
+
+    project.setStartDate(
+            java.time.LocalDate.parse(startDate)
+    );
+
+    project.setCompletionDate(
+            java.time.LocalDate.parse(completionDate)
+    );
 
     project.setStatus(
             ProjectStatus.valueOf(
-                    status));
+                    status.toUpperCase()
+            )
+    );
 
-    project.setDescription(
-            description);
+    project.setDescription(description);
 
-    project.setThumbnailUrl(
-            imageUrl);
+    project.setThumbnailUrl(imageUrl);
 
-    return projectRepository.save(
-            project);
+    return projectRepository.save(project);
 }
+
 
     @Override
     public List<Project> getAllProjects() {
