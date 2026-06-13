@@ -21,7 +21,7 @@ public class S3ServiceImpl implements S3Service {
 
     private final S3Client s3Client;
 
-    @Value("${cloud.aws.s3.bucket}")
+    @Value("${AWS_BUCKET_NAME}")
     private String bucketName;
 
     @Override
