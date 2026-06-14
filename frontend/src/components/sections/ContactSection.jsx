@@ -64,10 +64,11 @@ function ContactSection() {
 
         await axios.post(
 
-          "http://localhost:8080/api/contact",
+          `${import.meta.env.VITE_API_BASE_URL}/api/contact`,
 
           formData
         );
+
 
         enqueueSnackbar(
           "Enquiry Sent Successfully",
