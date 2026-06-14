@@ -1,33 +1,14 @@
-import axiosInstance
-from "./axiosInstance";
+import axios from "axios";
 
-export const getAllReviews =
-  async () => {
+const axiosInstance = axios.create({
 
-    const response =
-      await axiosInstance.get(
-        "/reviews"
-      );
+  baseURL:
+    `${import.meta.env.VITE_API_BASE_URL}/api`,
 
-    return response.data;
-};
+  headers: {
+    "Content-Type":
+      "application/json",
+  },
+});
 
-export const createReview =
-  async (reviewData) => {
-
-    const response =
-      await axiosInstance.post(
-        "/reviews",
-        reviewData
-      );
-
-    return response.data;
-};
-
-export const deleteReview =
-  async (id) => {
-
-    await axiosInstance.delete(
-      `/reviews/${id}`
-    );
-};
+export default axiosInstance;
