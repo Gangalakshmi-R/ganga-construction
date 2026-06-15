@@ -23,34 +23,94 @@ import {
   useState,
 } from "react";
 
-import {
-  Swiper,
-  SwiperSlide,
-} from "swiper/react";
-
-import {
-  Autoplay,
-  EffectCoverflow,
-  Pagination,
-} from "swiper/modules";
-
-import "swiper/css";
-import "swiper/css/effect-coverflow";
-import "swiper/css/pagination";
-
 import { getAllProjects } from "../../api/projectApi";
+
+const CARD_W = 480;
+const GAP = 55;
+const DEPTH = 260;
+const INTERVAL = 4000;
+
+function getSlotStyle(diff, n) {
+
+  const signed =
+    diff <= n / 2
+      ? diff
+      : diff - n;
+
+  const abs =
+    Math.abs(signed);
+
+  const sign =
+    Math.sign(signed);
+
+  if (abs === 0)
+    return {
+      tx: 0,
+      tz: 0,
+      ry: 0,
+      scale: 1,
+      opacity: 1,
+      blur: 0,
+      zIndex: 10,
+      active: true,
+    };
+
+  if (abs === 1)
+    return {
+      tx: sign * (CARD_W * 0.62 + GAP),
+      tz: -DEPTH * 0.5,
+      ry: sign * -3,
+      scale: 0.82,
+      opacity: 0.65,
+      blur: 1.5,
+      zIndex: 5,
+      active: false,
+    };
+
+  if (abs === 2)
+    return {
+      tx: sign * (CARD_W * 1.1 + GAP * 1.8),
+      tz: -DEPTH * 1.2,
+      ry: sign * -6,
+      scale: 0.66,
+      opacity: 0.28,
+      blur: 2.5,
+      zIndex: 2,
+      active: false,
+    };
+
+  return {
+    tx: sign * 9999,
+    tz: 0,
+    ry: 0,
+    scale: 0.5,
+    opacity: 0,
+    blur: 0,
+    zIndex: 0,
+    active: false,
+  };
+}
 
 function ProjectsSection() {
 
   const [projects, setProjects] =
     useState([]);
 
+  const [cur, setCur] =
+    useState(0);
+
+  const [animating, setAnimating] =
+    useState(false);
+
   const [lightboxProject,
     setLightboxProject] =
       useState(null);
 
-  const swiperRef =
+  const autoRef =
     useRef(null);
+
+  const touchRef =
+    useRef(0);
 
   useEffect(() => {
 
@@ -74,26 +134,76 @@ function ProjectsSection() {
       }
     };
 
+  const goTo = (idx) => {
+
+    if (animating || !projects.length)
+      return;
+
+    const n =
+      projects.length;
+
+    setAnimating(true);
+
+    setCur(
+      ((idx % n) + n) % n
+    );
+
+    setTimeout(
+      () => setAnimating(false),
+      700
+    );
+  };
+
+  const startAuto = () => {
+
+    clearInterval(autoRef.current);
+
+    autoRef.current =
+      setInterval(() => {
+
+        setCur((c) =>
+          (c + 1) % projects.length
+        );
+
+      }, INTERVAL);
+  };
+
+  useEffect(() => {
+
+    if (!projects.length) return;
+
+    startAuto();
+
+    return () =>
+      clearInterval(autoRef.current);
+
+  }, [projects.length]);
+
+  const handleNav = (dir) => {
+
+    goTo(cur + dir);
+
+    startAuto();
+  };
+
   const handleCardClick =
-    (project, isActive) => {
+    (i, active) => {
 
-      if (isActive) {
+      if (active) {
 
-        setLightboxProject(project);
+        setLightboxProject(
+          projects[i]
+        );
 
       } else {
 
-        const targetIndex =
-          projects.findIndex(
-            (p) =>
-              p.id === project.id
-          );
+        goTo(i);
 
-        swiperRef.current?.slideToLoop(
-          targetIndex
-        );
+        startAuto();
       }
     };
+
+  const n = projects.length;
 
   return (
 
@@ -261,7 +371,7 @@ transparent 1px
 
         </Reveal>
 
-        {/* MAIN SWIPER */}
+        {/* STAGE WRAPPER — arrows sit on sides of this */}
 
         <Box
           sx={{
@@ -275,23 +385,14 @@ transparent 1px
 
             margin:
               "0 auto",
-
-            display:
-              "flex",
-
-            alignItems:
-              "center",
-
-            justifyContent:
-              "center",
           }}
         >
 
-          {/* LEFT BUTTON */}
+          {/* LEFT ARROW */}
 
           <IconButton
             onClick={() =>
-              swiperRef.current?.slidePrev()
+              handleNav(-1)
             }
 
             sx={{
@@ -303,6 +404,11 @@ transparent 1px
                 md: "40px",
               },
 
+              top: "50%",
+
+              transform:
+                "translateY(-50%)",
+
               zIndex: 50,
 
               width: "60px",
@@ -335,269 +441,214 @@ transparent 1px
                   "rgba(255,255,255,0.22)",
 
                 transform:
-                  "scale(1.08)",
+                  "translateY(-50%) scale(1.08)",
               },
             }}
           >
             <ArrowBackIosNew />
           </IconButton>
 
-          {/* SWIPER */}
+          {/* 3D STAGE */}
 
-          <Swiper
-            modules={[
-              Autoplay,
-              EffectCoverflow,
-              Pagination,
-            ]}
-
-            effect="coverflow"
-
-            onSwiper={(swiper) => {
-
-              swiperRef.current =
-                swiper;
-            }}
-
-            centeredSlides={true}
-
-            slidesPerView="auto"
-
-            loop={true}
-
-            slideToClickedSlide={false}
-
-            grabCursor={true}
-
-            allowTouchMove={true}
-
-            speed={1800}
-
-            watchSlidesProgress={true}
-
-            coverflowEffect={{
-
-              rotate: 0,
-
-              stretch: -70,
-
-              depth: 220,
-
-              modifier: 1,
-
-              scale: 0.82,
-
-              slideShadows: false,
-            }}
-
-            autoplay={{
-              delay: 4000,
-
-              disableOnInteraction:
-                false,
-            }}
-
-            pagination={{
-              clickable: true,
-
-              dynamicBullets: true,
-            }}
-
-            style={{
+          <Box
+            sx={{
               width: "100%",
 
-              overflow: "visible",
+              height: {
+                xs: "420px",
+                md: "520px",
+              },
 
-              paddingTop: "50px",
+              position:
+                "relative",
 
-              paddingBottom: "90px",
+              display:
+                "flex",
+
+              alignItems:
+                "center",
+
+              justifyContent:
+                "center",
+
+              perspective:
+                "1200px",
+
+              overflow:
+                "hidden",
+
+              py: "50px",
+            }}
+
+            onTouchStart={(e) => {
+
+              touchRef.current =
+                e.touches[0].clientX;
+            }}
+
+            onTouchEnd={(e) => {
+
+              const dx =
+                e.changedTouches[0].clientX -
+                touchRef.current;
+
+              if (Math.abs(dx) > 40)
+                handleNav(dx < 0 ? 1 : -1);
             }}
           >
 
             {projects.map(
-              (project) => (
+              (project, i) => {
 
-                <SwiperSlide
-                  key={project.id}
+                const diff =
+                  ((i - cur) + n) % n;
 
-                  style={{
-                    display: "flex",
+                const {
+                  tx,
+                  tz,
+                  ry,
+                  scale,
+                  opacity,
+                  blur,
+                  zIndex,
+                  active,
+                } = getSlotStyle(diff, n);
 
-                    justifyContent:
-                      "center",
+                return (
 
-                    alignItems:
-                      "center",
+                  <Box
+                    key={project.id}
 
-                    width: "480px",
+                    onClick={() =>
+                      handleCardClick(i, active)
+                    }
 
-                    maxWidth:
-                      "85vw",
-                  }}
-                >
+                    sx={{
+                      position:
+                        "absolute",
 
-                  {({ isActive }) => (
+                      width: {
+                        xs: "85vw",
+                        md: `${CARD_W}px`,
+                      },
 
-                    <Box
-                      onClick={() =>
-                        handleCardClick(
-                          project,
-                          isActive
-                        )
-                      }
+                      maxWidth:
+                        `${CARD_W}px`,
 
-                      sx={{
+                      height: {
+                        xs: "380px",
+                        md: "460px",
+                      },
 
-                        position:
-                          "relative",
+                      borderRadius:
+                        "32px",
 
-                        overflow:
-                          "hidden",
+                      overflow:
+                        "hidden",
 
-                        width: "100%",
+                      cursor:
+                        "pointer",
 
-                        height: {
-                          xs: "380px",
-                          md: "460px",
-                        },
+                      transform: `
+translateX(${tx}px)
+translateZ(${tz}px)
+rotateY(${ry}deg)
+scale(${scale})
+`,
 
-                        borderRadius:
-                          "32px",
+                      opacity,
 
-                        background:
-                          "#ffffff",
+                      filter:
+                        blur > 0
+                          ? `blur(${blur}px)`
+                          : "none",
 
-                        transition:
-                          "all 1s cubic-bezier(0.22,1,0.36,1)",
+                      zIndex,
 
-                        transform:
-                          isActive
-                            ? "translateY(-22px) scale(1.02)"
-                            : "translateY(0px) scale(0.92)",
+                      transition:
+                        "all 0.75s cubic-bezier(0.22,1,0.36,1)",
 
-                        opacity:
-                          isActive
-                            ? 1
-                            : 0.65,
+                      willChange:
+                        "transform, opacity, filter",
 
-                        filter:
-                          isActive
-                            ? "blur(0px)"
-                            : "blur(1.5px)",
-
-                        zIndex:
-                          isActive
-                            ? 10
-                            : 1,
-
-                        animation:
-                          isActive
-                            ? "floatCard 5s ease-in-out infinite"
-                            : "none",
-
-                        "@keyframes floatCard": {
-
-                          "0%": {
-
-                            transform:
-                              "translateY(-22px) scale(1.02)",
-                          },
-
-                          "50%": {
-
-                            transform:
-                              "translateY(-30px) scale(1.025)",
-                          },
-
-                          "100%": {
-
-                            transform:
-                              "translateY(-22px) scale(1.02)",
-                          },
-                        },
-
-                        boxShadow:
-                          isActive
-                            ? `
+                      boxShadow:
+                        active
+                          ? `
 0 40px 90px rgba(0,0,0,0.45),
 0 0 50px rgba(45,212,191,0.10)
 `
-                            : "0 15px 40px rgba(2,6,23,0.12)",
+                          : "0 15px 40px rgba(2,6,23,0.12)",
 
-                        cursor:
-                          "pointer",
+                      "&::before": {
 
-                        "&:hover img": {
+                        content: '""',
+
+                        position:
+                          "absolute",
+
+                        inset: 0,
+
+                        background:
+                          "linear-gradient(120deg,rgba(255,255,255,0.12),transparent 28%,transparent 72%,rgba(255,255,255,0.08))",
+
+                        zIndex: 3,
+
+                        opacity:
+                          active ? 1 : 0.4,
+
+                        pointerEvents:
+                          "none",
+
+                        transition:
+                          "opacity 0.5s",
+                      },
+                    }}
+                  >
+
+                    {/* IMAGE */}
+
+                    <Box
+                      component="img"
+
+                      src={
+                        project.thumbnailUrl
+                      }
+
+                      alt={
+                        project.projectName
+                      }
+
+                      sx={{
+                        width: "100%",
+
+                        height: "100%",
+
+                        objectFit:
+                          "cover",
+
+                        transition:
+                          "transform 1.5s cubic-bezier(0.22,1,0.36,1)",
+
+                        "&:hover": {
 
                           transform:
-                            isActive
+                            active
                               ? "scale(1.08) translateY(-6px)"
                               : "scale(1.03)",
                         },
-
-                        "&::before": {
-
-                          content:
-                            '""',
-
-                          position:
-                            "absolute",
-
-                          inset: 0,
-
-                          background:
-                            "linear-gradient(120deg,rgba(255,255,255,0.12),transparent 28%,transparent 72%,rgba(255,255,255,0.08))",
-
-                          zIndex: 3,
-
-                          opacity:
-                            isActive
-                              ? 1
-                              : 0.4,
-
-                          pointerEvents:
-                            "none",
-                        },
                       }}
-                    >
+                    />
 
-                      {/* IMAGE */}
+                    {/* OVERLAY */}
 
-                      <Box
-                        component="img"
+                    <Box
+                      sx={{
+                        position:
+                          "absolute",
 
-                        src={
-                          project.thumbnailUrl
-                        }
+                        inset: 0,
 
-                        alt={
-                          project.projectName
-                        }
-
-                        sx={{
-                          width: "100%",
-
-                          height: "100%",
-
-                          objectFit:
-                            "cover",
-
-                          transition:
-                            "transform 1.5s cubic-bezier(0.22,1,0.36,1)",
-                        }}
-                      />
-
-                      {/* OVERLAY */}
-
-                      <Box
-                        sx={{
-                          position:
-                            "absolute",
-
-                          inset: 0,
-
-                          background:
-                            `
+                        background: `
 linear-gradient(
 to top,
 rgba(2,6,23,0.92),
@@ -605,125 +656,122 @@ rgba(2,6,23,0.18) 55%,
 transparent
 )
 `,
-                        }}
-                      />
+                      }}
+                    />
 
-                      {/* CONTENT */}
+                    {/* CONTENT */}
 
-                      <Box
+                    <Box
+                      sx={{
+                        position:
+                          "absolute",
+
+                        bottom: 0,
+
+                        left: 0,
+
+                        width: "100%",
+
+                        p: 4,
+
+                        zIndex: 5,
+
+                        background:
+                          "linear-gradient(to top, rgba(2,6,23,0.45), rgba(2,6,23,0))",
+
+                        backdropFilter:
+                          "blur(4px)",
+                      }}
+                    >
+
+                      <Typography
                         sx={{
-                          position:
-                            "absolute",
+                          color:
+                            "#5eead4",
 
-                          bottom: 0,
+                          fontWeight:
+                            700,
 
-                          left: 0,
+                          letterSpacing:
+                            "2px",
 
-                          width: "100%",
+                          mb: 0.5,
 
-                          p: 4,
+                          fontSize:
+                            "0.85rem",
 
-                          zIndex: 5,
-
-                          background:
-                            "linear-gradient(to top, rgba(2,6,23,0.45), rgba(2,6,23,0))",
-
-                          backdropFilter:
-                            "blur(4px)",
+                          textTransform:
+                            "uppercase",
                         }}
                       >
+                        {
+                          project.category
+                        }
+                      </Typography>
 
-                        <Typography
-                          sx={{
-                            color:
-                              "#5eead4",
+                      <Typography
+                        sx={{
+                          color:
+                            "white",
 
-                            fontWeight:
-                              700,
+                          fontWeight:
+                            700,
 
-                            letterSpacing:
-                              "2px",
+                          fontSize:
+                            active
+                              ? "1.8rem"
+                              : "1.4rem",
 
-                            mb: 0.5,
+                          transition:
+                            "font-size 0.6s cubic-bezier(0.22,1,0.36,1)",
 
-                            fontSize:
-                              "0.85rem",
+                          mb: 1,
 
-                            textTransform:
-                              "uppercase",
-                          }}
-                        >
-                          {
-                            project.category
-                          }
-                        </Typography>
+                          lineHeight:
+                            1.2,
+                        }}
+                      >
+                        {
+                          project.projectName
+                        }
+                      </Typography>
 
-                        <Typography
-                          sx={{
-                            color:
-                              "white",
+                      <Typography
+                        sx={{
+                          color:
+                            "rgba(255,255,255,0.75)",
 
-                            fontWeight:
-                              700,
+                          fontSize:
+                            "0.9rem",
 
-                            fontSize:
-                              isActive
-                                ? "1.8rem"
-                                : "1.4rem",
+                          display:
+                            "flex",
 
-                            transition:
-                              "font-size 0.6s cubic-bezier(0.22,1,0.36,1)",
+                          alignItems:
+                            "center",
 
-                            mb: 1,
-
-                            lineHeight:
-                              1.2,
-                          }}
-                        >
-                          {
-                            project.projectName
-                          }
-                        </Typography>
-
-                        <Typography
-                          sx={{
-                            color:
-                              "rgba(255,255,255,0.75)",
-
-                            fontSize:
-                              "0.9rem",
-
-                            display:
-                              "flex",
-
-                            alignItems:
-                              "center",
-
-                            gap:
-                              "4px",
-                          }}
-                        >
-                          📍 {
-                            project.location
-                          }
-                        </Typography>
-
-                      </Box>
+                          gap: "4px",
+                        }}
+                      >
+                        📍 {
+                          project.location
+                        }
+                      </Typography>
 
                     </Box>
-                  )}
 
-                </SwiperSlide>
-              )
+                  </Box>
+                );
+              }
             )}
 
-          </Swiper>
+          </Box>
 
-          {/* RIGHT BUTTON */}
+          {/* RIGHT ARROW */}
 
           <IconButton
             onClick={() =>
-              swiperRef.current?.slideNext()
+              handleNav(1)
             }
 
             sx={{
@@ -735,6 +783,11 @@ transparent
                 md: "40px",
               },
 
+              top: "50%",
+
+              transform:
+                "translateY(-50%)",
+
               zIndex: 50,
 
               width: "60px",
@@ -767,12 +820,78 @@ transparent
                   "rgba(255,255,255,0.22)",
 
                 transform:
-                  "scale(1.08)",
+                  "translateY(-50%) scale(1.08)",
               },
             }}
           >
             <ArrowForwardIos />
           </IconButton>
+
+         
+{/* CENTER DOT INDICATORS */}
+
+<Stack
+  direction="row"
+  spacing={1.2}
+
+  sx={{
+
+    position: "absolute",
+
+    bottom: "-20px",
+
+    left: "50%",
+
+    transform: "translateX(-50%)",
+
+    zIndex: 100,
+  }}
+>
+
+  {projects.map((_, i) => (
+
+    <Box
+      key={i}
+
+      onClick={() => goTo(i)}
+
+      sx={{
+
+        width:
+          i === cur
+            ? "28px"
+            : "10px",
+
+        height: "10px",
+
+        borderRadius: "999px",
+
+        cursor: "pointer",
+
+        background:
+          i === cur
+            ? "#5eead4"
+            : "rgba(255,255,255,0.35)",
+
+        transition:
+          "all 0.45s cubic-bezier(0.22,1,0.36,1)",
+
+        boxShadow:
+          i === cur
+            ? "0 0 12px rgba(94,234,212,0.7)"
+            : "none",
+
+        "&:hover": {
+
+          background:
+            "#5eead4",
+        },
+      }}
+    />
+
+  ))}
+
+</Stack>
 
         </Box>
 
