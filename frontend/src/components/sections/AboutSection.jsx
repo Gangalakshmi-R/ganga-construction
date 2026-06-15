@@ -202,70 +202,7 @@ transparent 1px
               }}
             >
 
-              {/* MAIN IMAGE */}
-
-              <Box
-                sx={{
-                  overflow:
-                    "hidden",
-
-                  borderRadius:
-                    "34px",
-
-                  position:
-                    "relative",
-
-                  boxShadow:
-                    "0 35px 80px rgba(0,0,0,0.35)",
-
-                  "&:hover img": {
-
-                    transform:
-                      "scale(1.08)",
-                  },
-                }}
-              >
-
-                <Box
-                  component="img"
-                  loading="lazy"
-
-src={aboutImage}
-
-                  alt="About"
-
-                  sx={{
-                    width: "100%",
-
-                    height: {
-                      xs: "400px",
-                      md: "600px",
-                    },
-
-                    objectFit:
-                      "cover",
-
-                    transition:
-                      "transform 1.5s cubic-bezier(0.22,1,0.36,1)",
-                  }}
-                />
-
-                {/* IMAGE OVERLAY */}
-
-                <Box
-                  sx={{
-                    position:
-                      "absolute",
-
-                    inset: 0,
-
-                    background:
-                      "linear-gradient(to top, rgba(2,6,23,0.55), transparent 45%)",
-                  }}
-                />
-
-              </Box>
-
+           
               {/* FLOATING CARD */}
 
               <Box
