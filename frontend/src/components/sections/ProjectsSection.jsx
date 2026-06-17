@@ -95,6 +95,8 @@ function ProjectsSection() {
 
   const [projects, setProjects] =
     useState([]);
+  const [loading, setLoading] =
+  useState(true);
 
   const [cur, setCur] =
     useState(0);
@@ -118,21 +120,27 @@ function ProjectsSection() {
 
   }, []);
 
-  const fetchProjects =
-    async () => {
+ const fetchProjects =
+  async () => {
 
-      try {
+    try {
 
-        const response =
-          await getAllProjects();
+      setLoading(true);
 
-        setProjects(response);
+      const response =
+        await getAllProjects();
 
-      } catch (error) {
+      setProjects(response);
 
-        console.error(error);
-      }
-    };
+    } catch (error) {
+
+      console.error(error);
+
+    } finally {
+
+      setLoading(false);
+    }
+  };
 
   const goTo = (idx) => {
 
@@ -496,8 +504,36 @@ transparent 1px
                 handleNav(dx < 0 ? 1 : -1);
             }}
           >
+              {loading && (
 
-            {projects.map(
+  <Typography
+    sx={{
+      color: "white",
+      fontSize: "1.3rem",
+      fontWeight: 600,
+      textAlign: "center",
+    }}
+  >
+    Loading Projects...
+  </Typography>
+
+)}
+
+{!loading && projects.length === 0 && (
+
+  <Typography
+    sx={{
+      color: "white",
+      fontSize: "1.3rem",
+      fontWeight: 600,
+      textAlign: "center",
+    }}
+  >
+    No Projects Available
+  </Typography>
+
+)}
+            {!loading && projects.map(
               (project, i) => {
 
                 const diff =
