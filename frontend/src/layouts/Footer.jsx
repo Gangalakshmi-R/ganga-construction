@@ -154,7 +154,7 @@ transparent 1px
                 GANGA
               </Box>{" "}
 
-              CONSTRUCTION
+              CONSTRUCTIONS
 
             </Typography>
 
@@ -331,7 +331,7 @@ transparent 1px
                 "0.5px",
             }}
           >
-            © 2026 Ganga Construction.
+            © 2026 Ganga Constructions.
             All Rights Reserved.
           </Typography>
 

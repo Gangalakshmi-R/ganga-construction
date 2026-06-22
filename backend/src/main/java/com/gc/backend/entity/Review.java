@@ -35,4 +35,8 @@ public class Review extends BaseEntity {
     private Integer rating;
 
     private String imageUrl;
+
+    private String clientLocation;
+
+    private String projectType;
 }

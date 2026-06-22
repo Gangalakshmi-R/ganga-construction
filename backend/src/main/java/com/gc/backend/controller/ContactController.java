@@ -22,23 +22,17 @@ import org.springframework.web.bind.annotation.*;
 
 public class ContactController {
 
-    private final
-    ContactService
-        contactMessageService;
+    private final ContactService contactMessageService;
 
     @PostMapping
 
-    public ResponseEntity<ContactMessage>
-    saveContact(
+    public ResponseEntity<ContactMessage> saveContact(
 
-        @RequestBody
-        ContactRequest dto
-    ) {
+            @RequestBody ContactRequest dto) {
 
         return ResponseEntity.ok(
 
-            contactMessageService
-                .saveContact(dto)
-        );
+                contactMessageService
+                        .saveContact(dto));
     }
 }

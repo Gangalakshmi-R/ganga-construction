@@ -16,14 +16,10 @@ public class FileUploadController {
 
     private final S3Service s3Service;
 
-    @PostMapping(
-            value = "/upload",
-            consumes = "multipart/form-data"
-    )
+    @PostMapping(value = "/upload", consumes = "multipart/form-data")
     @ResponseStatus(HttpStatus.CREATED)
     public String uploadFile(
-            @RequestParam("file")
-            MultipartFile file) {
+            @RequestParam("file") MultipartFile file) {
 
         return s3Service.uploadFile(file);
     }

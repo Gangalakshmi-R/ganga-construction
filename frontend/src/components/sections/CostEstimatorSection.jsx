@@ -13,6 +13,30 @@ import { useState } from "react";
 
 import axios from "axios";
 
+import VerifiedRoundedIcon from "@mui/icons-material/VerifiedRounded";
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import EmailRoundedIcon from "@mui/icons-material/EmailRounded";
+
+// Lead-generation trust signals
+const TRUST_PILLS = [
+  "Free Cost Estimate",
+  "No Hidden Charges",
+  "Expert Consultation",
+  "Response Within 24 Hours",
+];
+
+
+
+
+// Placeholders — update with real business details
+const CONTACT_DETAILS = {
+  callNumber: "+91 XXXXXXXXXX",
+  whatsappNumber: "+91 XXXXXXXXXX",
+  email: "contact@gangaconstruction.com",
+};
+
 function CostEstimatorSection() {
 
   const [formData, setFormData] =
@@ -49,14 +73,19 @@ function CostEstimatorSection() {
 
       setLoading(true);
 
-    
-const API = import.meta.env.VITE_API_BASE_URL;
 
-const response =
-  await axios.post(
-    `${API}/api/cost-estimations`,
-    formData
-  );
+      const API = import.meta.env.VITE_API_BASE_URL;
+
+      const response =
+        await axios.post(
+          `${API}/api/cost-estimations`,
+          formData
+        );
+
+      const ratePerSqft =
+        Math.round(
+          estimatedCost / formData.areaSqft
+        );
 
 
 
@@ -212,7 +241,7 @@ transparent 1.2px
               mb: 2,
             }}
           >
-            Get Instant Construction Cost Estimate
+            Estimate Your Construction Budget Instantly
           </Typography>
 
           <Typography
@@ -230,29 +259,69 @@ transparent 1.2px
                 "700px",
 
               mx: "auto",
+
+              mb: 4,
             }}
           >
-            Quickly estimate your project cost using our smart construction
-            calculator based on building type, floors, area, and quality
-            standards.
+            Get an approximate construction budget based on building type,
+            area, floors, and quality preferences. Perfect for planning your
+            dream home, villa, renovation, or commercial project.
           </Typography>
 
+          {/* TRUST STRIP */}
+
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              gap: { xs: 1.2, md: 1.6 },
+              mb: 2.5,
+            }}
+          >
+            {TRUST_PILLS.map((point) => (
+              <Box
+                key={point}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 0.7,
+                  px: 2,
+                  py: 0.9,
+                  borderRadius: "999px",
+                  background: "rgba(20,184,166,0.07)",
+                  border: "1px solid rgba(20,184,166,0.25)",
+                  backdropFilter: "blur(10px)",
+                  transition: "all 0.3s ease",
+
+                  "&:hover": {
+                    borderColor: "rgba(20,184,166,0.5)",
+                    boxShadow: "0 0 18px rgba(20,184,166,0.22)",
+                  },
+                }}
+              >
+                <VerifiedRoundedIcon
+                  sx={{ color: "#14b8a6", fontSize: "1.05rem" }}
+                />
+                <Typography
+                  sx={{
+                    color: "#e2e8f0",
+                    fontWeight: 600,
+                    fontSize: "0.85rem",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {point}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+
+          {/* BUSINESS CREDIBILITY STRIP */}
+
+
+
         </Box>
-
-        {/* DIVIDER */}
-
-        <Box
-          sx={{
-            width: "100%",
-
-            height: "1px",
-
-            background:
-              "linear-gradient(to right,transparent,rgba(20,184,166,0.25),transparent)",
-
-            my: 6,
-          }}
-        />
 
         {/* FORM SECTION */}
 
@@ -599,10 +668,25 @@ transparent 1.2px
 
               ) : (
 
-                "Generate Estimate"
+                "Calculate Project Cost"
               )}
 
             </Button>
+
+            {/* DISCLAIMER */}
+
+            <Typography
+              sx={{
+                color: "#64748b",
+                fontSize: "0.75rem",
+                textAlign: "center",
+                lineHeight: 1.6,
+              }}
+            >
+              *Estimated cost is indicative and may vary based on design,
+              materials, location, site conditions, and finishing
+              requirements.
+            </Typography>
 
           </Box>
 
@@ -641,14 +725,14 @@ transparent 1.2px
                   opacity: 0,
 
                   transform:
-                    "translateY(20px)",
+                    "translateY(20px) scale(0.96)",
                 },
 
                 to: {
                   opacity: 1,
 
                   transform:
-                    "translateY(0px)",
+                    "translateY(0px) scale(1)",
                 },
               },
             }}
@@ -674,74 +758,200 @@ transparent 1.2px
               Estimated Result
             </Typography>
 
+            {/* RESULT CARD with subtle glow pulse behind it */}
+
             <Box
               sx={{
+                position: "relative",
                 mt: 3,
-
                 mx: "auto",
-
-                maxWidth:
-                  "420px",
-
-                p: 4,
-
-                borderRadius:
-                  "26px",
-
-                background:
-                  "rgba(15,23,42,0.82)",
-
-                border:
-                  "1px solid rgba(20,184,166,0.28)",
-
-                backdropFilter:
-                  "blur(16px)",
-
-                boxShadow:
-                  "0 25px 60px rgba(0,0,0,0.45)",
+                maxWidth: "420px",
               }}
             >
 
-              <Typography
+              <Box
                 sx={{
-                  color:
-                    "#94a3b8",
+                  position: "absolute",
+                  inset: "-10px",
+                  borderRadius: "30px",
+                  background:
+                    "radial-gradient(circle, rgba(20,184,166,0.25) 0%, transparent 70%)",
+                  filter: "blur(18px)",
+                  animation: "glowPulse 2.4s ease-in-out infinite",
+                  zIndex: 0,
 
-                  mb: 1,
+                  "@keyframes glowPulse": {
+                    "0%, 100%": {
+                      opacity: 0.5,
+                    },
+                    "50%": {
+                      opacity: 1,
+                    },
+                  },
+                }}
+              />
 
-                  letterSpacing:
-                    "2px",
+              <Box
+                sx={{
+                  position: "relative",
+                  zIndex: 1,
 
-                  textTransform:
-                    "uppercase",
+                  p: 4,
+
+                  borderRadius:
+                    "26px",
+
+                  background:
+                    "rgba(15,23,42,0.82)",
+
+                  border:
+                    "1px solid rgba(20,184,166,0.28)",
+
+                  backdropFilter:
+                    "blur(16px)",
+
+                  boxShadow:
+                    "0 25px 60px rgba(0,0,0,0.45)",
                 }}
               >
-                Estimated Cost
-              </Typography>
 
-              <Typography
-                sx={{
-                  fontSize:
-                    "2.6rem",
+                <Typography
+                  sx={{
+                    color:
+                      "#94a3b8",
 
-                  fontWeight:
-                    800,
+                    mb: 1,
 
-                  color:
-                    "#ffffff",
-                }}
-              >
-                ₹
-                {Number(
-                  estimatedCost
-                ).toLocaleString()}
-              </Typography>
+                    letterSpacing:
+                      "2px",
+
+                    textTransform:
+                      "uppercase",
+                  }}
+                >
+                  Estimated Cost
+                </Typography>
+
+                <Typography
+                  sx={{
+                    fontSize: "2.6rem",
+                    fontWeight: 800,
+                    color: "#ffffff",
+                    mb: 1,
+                  }}
+                >
+                  ₹
+                  {Number(
+                    estimatedCost
+                  ).toLocaleString()}
+                </Typography>
+
+                <Typography
+                  sx={{
+                    color: "#14b8a6",
+                    fontSize: "1rem",
+                    fontWeight: 600,
+                    mb: 2.5,
+                  }}
+                >
+                  Approximate Rate:
+                  ₹
+                  {Math.round(
+                    estimatedCost /
+                    Number(formData.areaSqft)
+                  ).toLocaleString()}
+                  {" "} / Sq.Ft
+                </Typography>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 0.8,
+                    alignItems: "center",
+                  }}
+                >
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 0.8 }}>
+                    <CheckCircleRoundedIcon
+                      sx={{ color: "#14b8a6", fontSize: "1rem" }}
+                    />
+                    <Typography
+                      sx={{ color: "#94a3b8", fontSize: "0.85rem" }}
+                    >
+                      Approximate Budget Estimate
+                    </Typography>
+                  </Box>
+
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 0.8 }}>
+                    <CheckCircleRoundedIcon
+                      sx={{ color: "#14b8a6", fontSize: "1rem" }}
+                    />
+                    <Typography
+                      sx={{ color: "#94a3b8", fontSize: "0.85rem" }}
+                    >
+                      Based On Current Construction Standards
+                    </Typography>
+                  </Box>
+                </Box>
+
+              </Box>
 
             </Box>
 
           </Box>
-        )}
 
+
+        )}
+        <Box
+          sx={{
+            textAlign: "center",
+            mt: 5,
+            animation: "bounceArrow 2s infinite",
+
+            "@keyframes bounceArrow": {
+              "0%,20%,50%,80%,100%": {
+                transform: "translateY(0)",
+              },
+              "40%": {
+                transform: "translateY(-8px)",
+              },
+              "60%": {
+                transform: "translateY(-4px)",
+              },
+            },
+          }}
+        >
+          <Typography
+            sx={{
+              color: "#ffffff",
+              fontWeight: 700,
+              fontSize: "1.1rem",
+              mb: 1,
+            }}
+          >
+            Ready To Build Your Dream Project?
+          </Typography>
+
+          <Typography
+            sx={{
+              color: "#94a3b8",
+              fontSize: "0.95rem",
+              mb: 1,
+            }}
+          >
+            Scroll Down To Schedule A Free Consultation
+          </Typography>
+
+          <Typography
+            sx={{
+              color: "#14b8a6",
+              fontSize: "2rem",
+              fontWeight: 700,
+            }}
+          >
+            ↓
+          </Typography>
+        </Box>
       </Container>
 
     </Box>

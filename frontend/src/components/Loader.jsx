@@ -220,7 +220,7 @@ transparent 1px
           GANGA
         </Box>{" "}
 
-        CONSTRUCTION
+        CONSTRUCTIONS
 
       </Typography>
 

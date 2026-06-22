@@ -7,19 +7,19 @@ import {
 } from "@mui/material";
 
 import Reveal
-from "../../components/Reveal";
+  from "../../components/Reveal";
 
 import ArchitectureIcon
-from "@mui/icons-material/Architecture";
+  from "@mui/icons-material/Architecture";
 
 import EngineeringIcon
-from "@mui/icons-material/Engineering";
+  from "@mui/icons-material/Engineering";
 
 import HomeWorkIcon
-from "@mui/icons-material/HomeWork";
+  from "@mui/icons-material/HomeWork";
 
 import DesignServicesIcon
-from "@mui/icons-material/DesignServices";
+  from "@mui/icons-material/DesignServices";
 
 function ServicesSection() {
 
@@ -27,25 +27,10 @@ function ServicesSection() {
 
     {
       title:
-        "Architectural Planning",
-
-      description:
-        "Modern architectural solutions focused on elegance, efficiency, and structural excellence.",
-
-      icon:
-        <ArchitectureIcon
-          sx={{
-            fontSize: 34,
-          }}
-        />,
-    },
-
-    {
-      title:
         "Residential Construction",
 
       description:
-        "Premium villas and homes built with trusted engineering and superior craftsmanship.",
+        "Custom homes, independent houses, and luxury villas built with quality materials, expert workmanship, and long-lasting durability.",
 
       icon:
         <HomeWorkIcon
@@ -57,11 +42,10 @@ function ServicesSection() {
 
     {
       title:
-        "Structural Engineering",
+        "Commercial Construction",
 
       description:
-        "Safe, durable, and optimized structural systems for long-lasting projects.",
-
+        "Office buildings, showrooms,and commercial developments executed with professional supervision, quality standards, & timely delivery.",
       icon:
         <EngineeringIcon
           sx={{
@@ -72,10 +56,24 @@ function ServicesSection() {
 
     {
       title:
-        "Interior & Space Design",
+        "Architectural Planning",
 
       description:
-        "Elegant interiors and functional spaces designed for comfort, style, and modern everyday living.",
+        "Detailed floor plans, 3D elevations, site layouts, and project planning designed to transform ideas into buildable realities.",
+      icon:
+        <ArchitectureIcon
+          sx={{
+            fontSize: 34,
+          }}
+        />,
+    },
+
+    {
+      title:
+        "Renovation & Remodeling",
+
+      description:
+        "Transform existing homes and commercial spaces with modern upgrades, structural improvements, and elegant finishing solutions.",
 
       icon:
         <DesignServicesIcon
@@ -84,8 +82,8 @@ function ServicesSection() {
           }}
         />,
     },
-  ];
 
+  ];
   return (
 
     <Box
@@ -101,9 +99,9 @@ function ServicesSection() {
 
         overflow: "hidden",
 
-      backgroundColor: "#ffffff",
+        backgroundColor: "#ffffff",
 
-backgroundImage: `
+        backgroundImage: `
 
 linear-gradient(
 to right,
@@ -119,9 +117,9 @@ transparent 1.4px
 
 `,
 
-backgroundSize: "38px 38px",
+        backgroundSize: "38px 38px",
 
-backgroundPosition: "0 0",
+        backgroundPosition: "0 0",
       }}
     >
 
@@ -232,10 +230,7 @@ backgroundPosition: "0 0",
                     "1000px",
                 }}
               >
-                Delivering
-                Innovative
-                Construction
-                Solutions
+                Complete Construction Solutions for Every Project
               </Typography>
 
             </Reveal>
@@ -247,7 +242,7 @@ backgroundPosition: "0 0",
                   color:
                     "#475569",
 
-                  lineHeight:2.0,
+                  lineHeight: 2.0,
 
                   fontSize:
                     "1.02rem",
@@ -259,11 +254,10 @@ backgroundPosition: "0 0",
                     "0.2px",
                 }}
               >
-                Ganga Construction combines modern
-                engineering, premium design, and
-                trusted execution to create elegant
-                residential and commercial spaces
-                built for the future.
+                Ganga Construction delivers end-to-end construction solutions across Tamil Nadu,
+                from planning and design to construction,
+                renovation, and project completion with expert
+                supervision and quality workmanship.
               </Typography>
 
             </Reveal>
@@ -275,9 +269,9 @@ backgroundPosition: "0 0",
           <Grid
             item
 
-            xs={12}
+            xs={10}
 
-            md={12}
+            md={10}
           >
 
             <Box

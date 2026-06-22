@@ -16,7 +16,7 @@ import {
 }
 from "react-scroll";
 
-import houseImage from "../../assets/house.png";
+import houseImage from "../../assets/h1.png";
 
 
 function Hero() {
@@ -27,7 +27,7 @@ function Hero() {
       sx={{
         position: "relative",
 
-        minHeight: "100vh",
+        minHeight: "92vh",
 
         paddingTop: "90px",
 
@@ -44,8 +44,8 @@ function Hero() {
 linear-gradient(
   to right,
   rgba(2,6,23,0.92) 15%,
-  rgba(2,6,23,0.72) 42%,
-  rgba(2,6,23,0.30) 72%,
+  rgba(2,6,23,0.72) 50%,
+  rgba(2,6,23,0.30) 82%,
   rgba(2,6,23,0.08) 100%
 ),
 
@@ -150,7 +150,7 @@ isolation: "isolate",
 
     textTransform: "uppercase",
 
-    mb: 2.5,
+    mb: 3,
 
     opacity: 0.92,
   }}
@@ -175,12 +175,12 @@ isolation: "isolate",
 
     fontSize: {
       xs: "2.6rem",
-      md: "5.2rem",
+      md: "4.2rem",
     },
 
     maxWidth: "940px",
 
-    mb: 3,
+    mb: 5,
 
     textShadow:
       "0 12px 40px rgba(0,0,0,0.28)",
@@ -212,13 +212,13 @@ isolation: "isolate",
 
     maxWidth: "610px",
 
-    mb: 3,
+    mb: 6,
   }}
 >
-  At Ganga Construction, our resolution is
-  elevating standard environments into premier
-  addresses through expert supervision and
-  pristine finishes.
+ Building quality homes, villas, commercial
+  spaces, and renovation projects across Tamil
+  Nadu with expert craftsmanship, reliable
+  execution, and lasting value.
 </Typography>
 
 </Reveal>
@@ -232,7 +232,7 @@ isolation: "isolate",
 
     flexWrap: "wrap",
 
-    mt: 1,
+    mt: 3,
   }}
 >
 
@@ -320,7 +320,7 @@ isolation: "isolate",
         },
       }}
     >
-      Explore Projects
+      View Completed Projects
     </Button>
 
   </Link>
@@ -414,7 +414,7 @@ isolation: "isolate",
         },
       }}
     >
-      Cost Estimation
+     Get Free Cost Estimate
     </Button>
 
   </Link>
