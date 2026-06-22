@@ -33,6 +33,14 @@ function ContactSection() {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  // 1. Add form validation variable
+  const isFormValid =
+    formData.name.trim() &&
+    formData.email.trim() &&
+    formData.phone.trim() &&
+    formData.place.trim() &&
+    formData.landDetails.trim();
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -262,126 +270,126 @@ function ContactSection() {
         </Stack>
 
         {/* RESPONSE PROMISE BADGES */}
-{/* RESPONSE PROMISE BADGES */}
 
-<Box
-  sx={{
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    flexWrap: "wrap",
-    gap: 2,
-    mb: 5,
-    maxWidth: "900px",
-    mx: "auto",
-  }}
->
-  {[
-    "Free Consultation",
-    "Site Visit Available",
-    "Response Within 24 Hours",
-  ].map((badge, i) => (
-    <Box
-      key={badge}
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        gap: 0.8,
-
-        px: 2.5,
-        py: 0.9,
-
-        borderRadius: "50px",
-
-        background: "rgba(212,226,233,0.65)",
-
-        backdropFilter: "blur(12px)",
-
-        border: "1px solid rgba(20,184,166,0.22)",
-
-        boxShadow:
-          "0 6px 20px rgba(15,23,42,0.05)",
-
-        animation: `floatBadge ${
-          3.5 + i * 0.5
-        }s ease-in-out infinite`,
-
-        "@keyframes floatBadge": {
-          "0%": {
-            transform: "translateY(0px)",
-          },
-
-          "50%": {
-            transform: "translateY(-5px)",
-          },
-
-          "100%": {
-            transform: "translateY(0px)",
-          },
-        },
-
-        transition:
-          "all 0.4s cubic-bezier(0.22,1,0.36,1)",
-
-        "&:hover": {
-          transform:
-            "translateY(-6px) scale(1.04)",
-
-          boxShadow:
-            "0 14px 32px rgba(20,184,166,0.18)",
-
-          border:
-            "1px solid #14b8a6",
-
-          background:
-            "rgba(20,184,166,0.10)",
-        },
-      }}
-    >
-      <Box
-        sx={{
-          width: 20,
-          height: 20,
-
-          borderRadius: "50%",
-
-          background:
-            "linear-gradient(135deg,#14b8a6,#0f766e)",
-
-          display: "flex",
-
-          alignItems: "center",
-
-          justifyContent: "center",
-
-          flexShrink: 0,
-        }}
-      >
-        <Typography
+        <Box
           sx={{
-            color: "white",
-            fontSize: "0.65rem",
-            fontWeight: 800,
-            lineHeight: 1,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: 2,
+            mb: 5,
+            maxWidth: "900px",
+            mx: "auto",
           }}
         >
-          ✓
-        </Typography>
-      </Box>
+          {[
+            "Free Consultation",
+            "Site Visit Available",
+            "Response Within 24 Hours",
+          ].map((badge, i) => (
+            <Box
+              key={badge}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 0.8,
 
-      <Typography
-        sx={{
-          color: "#0f172a",
-          fontWeight: 600,
-          fontSize: "0.88rem",
-          whiteSpace: "nowrap",
-        }}
-      >
-        {badge}
-      </Typography>
-    </Box>
-  ))}
-</Box>
+                px: 2.5,
+                py: 0.9,
+
+                borderRadius: "50px",
+
+                background: "rgba(212,226,233,0.65)",
+
+                backdropFilter: "blur(12px)",
+
+                border: "1px solid rgba(20,184,166,0.22)",
+
+                boxShadow:
+                  "0 6px 20px rgba(15,23,42,0.05)",
+
+                animation: `floatBadge ${
+                  3.5 + i * 0.5
+                }s ease-in-out infinite`,
+
+                "@keyframes floatBadge": {
+                  "0%": {
+                    transform: "translateY(0px)",
+                  },
+
+                  "50%": {
+                    transform: "translateY(-5px)",
+                  },
+
+                  "100%": {
+                    transform: "translateY(0px)",
+                  },
+                },
+
+                transition:
+                  "all 0.4s cubic-bezier(0.22,1,0.36,1)",
+
+                "&:hover": {
+                  transform:
+                    "translateY(-6px) scale(1.04)",
+
+                  boxShadow:
+                    "0 14px 32px rgba(20,184,166,0.18)",
+
+                  border:
+                    "1px solid #14b8a6",
+
+                  background:
+                    "rgba(20,184,166,0.10)",
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  width: 20,
+                  height: 20,
+
+                  borderRadius: "50%",
+
+                  background:
+                    "linear-gradient(135deg,#14b8a6,#0f766e)",
+
+                  display: "flex",
+
+                  alignItems: "center",
+
+                  justifyContent: "center",
+
+                  flexShrink: 0,
+                }}
+              >
+                <Typography
+                  sx={{
+                    color: "white",
+                    fontSize: "0.65rem",
+                    fontWeight: 800,
+                    lineHeight: 1,
+                  }}
+                >
+                  ✓
+                </Typography>
+              </Box>
+
+              <Typography
+                sx={{
+                  color: "#0f172a",
+                  fontWeight: 600,
+                  fontSize: "0.88rem",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {badge}
+              </Typography>
+            </Box>
+          ))}
+        </Box>
+        
         {/* CTA BUTTONS */}
         <Stack
           direction={{ xs: "column", sm: "row" }}
@@ -571,11 +579,26 @@ function ContactSection() {
               Tell us about your project and our team will contact you shortly.
             </Typography>
 
+            {/* 4. Add helpful message above button */}
+            {!isFormValid && (
+              <Typography
+                sx={{
+                  color: "#fde68a",
+                  fontSize: "0.82rem",
+                  textAlign: "center",
+                  mt: 1,
+                }}
+              >
+                Please fill all fields to submit your enquiry.
+              </Typography>
+            )}
+
             {/* SUBMIT BUTTON */}
             <Button
               type="submit"
               variant="contained"
-              disabled={loading}
+              // 2. Update Submit Button disabled attribute
+              disabled={loading || !isFormValid}
               fullWidth
               sx={{
                 position: "relative",
@@ -606,6 +629,12 @@ function ContactSection() {
                 "&:hover::before": {
                   left: "120%",
                 },
+                // 3. Add disabled styling
+                "&.Mui-disabled": {
+                  background: "rgba(255,255,255,0.18)",
+                  color: "rgba(255,255,255,0.55)",
+                  cursor: "not-allowed",
+                },
               }}
             >
               {loading ? "Sending..." : "Send Enquiry"}
@@ -627,7 +656,6 @@ function ContactSection() {
           </Stack>
         </Box>
 
-       
       </Container>
     </Box>
   );
@@ -656,7 +684,7 @@ const infoCardStyles = (animDuration) => ({
 
   flexDirection: "column",
 
-  justifyContent: "center", // ADD THIS
+  justifyContent: "center",
 
   alignItems: "center",
 
