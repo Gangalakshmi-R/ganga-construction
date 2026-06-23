@@ -13,13 +13,15 @@ import houseImage from "../../assets/h1.png";
 
 function Hero() {
   return (
-    <Box 
+    <Box
       id="home"
       data-aos="fade-up"
       sx={{
         position: "relative",
-        minHeight: { xs: "85vh", sm: "90vh", md: "92vh" },
-        paddingTop: { xs: "140px", md: "160px" },
+        minHeight: "72vh",
+        paddingTop: "70px",
+        paddingBottom: "50px",
+        paddingTop: { xs: "140px", md: "120px" },
         paddingBottom: { xs: "80px", md: "100px" },
         display: "flex",
         alignItems: "center",
