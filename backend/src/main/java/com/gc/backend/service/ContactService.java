@@ -1,6 +1,5 @@
 package com.gc.backend.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gc.backend.dto.request.ContactRequest;
 
