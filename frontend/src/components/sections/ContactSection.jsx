@@ -207,7 +207,7 @@ function ContactSection() {
 
             {/* VIEW ON GOOGLE MAPS BUTTON */}
             <Button
-              href="https://www.google.com/maps/search/Trichy,+Tamil+Nadu"
+                href="https://www.google.com/maps?q=10.80752,78.65429"
               target="_blank"
               rel="noopener noreferrer"
               startIcon={
