@@ -12,7 +12,7 @@ import {
 // Icons for Team Metrics & Expertise
 import EngineeringRoundedIcon from "@mui/icons-material/EngineeringRounded";
 import VerifiedUserRoundedIcon from "@mui/icons-material/VerifiedUserRounded";
-import EscalatorWarningRoundedIcon from "@mui/icons-material/EscalatorWarningRounded";
+import SupervisorAccountRoundedIcon from "@mui/icons-material/SupervisorAccountRounded"; // Replaced EscalatorWarning with a more premium icon
 import AssignmentTurnedInRoundedIcon from "@mui/icons-material/AssignmentTurnedInRounded";
 import ArchitectureRoundedIcon from "@mui/icons-material/ArchitectureRounded";
 import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlineRounded";
@@ -24,7 +24,7 @@ function AboutSection() {
 
   const teamSpecialties = [
     { text: "Experienced Site Engineers", icon: <EngineeringRoundedIcon sx={{ color: "#5eead4" }} /> },
-    { text: "Project Supervisors", icon: <EscalatorWarningRoundedIcon sx={{ color: "#5eead4" }} /> },
+    { text: "Project Supervisors", icon: <SupervisorAccountRoundedIcon sx={{ color: "#5eead4" }} /> },
     { text: "Quality Control Specialists", icon: <VerifiedUserRoundedIcon sx={{ color: "#5eead4" }} /> },
     { text: "Planning & Execution Experts", icon: <AssignmentTurnedInRoundedIcon sx={{ color: "#5eead4" }} /> },
   ];
@@ -44,7 +44,7 @@ function AboutSection() {
       sx={{
         position: "relative",
         overflow: "hidden",
-        py: 7,
+        py: { xs: 5, md: 8 }, // Balanced breathing room on mobile vs desktop
         backgroundColor: "#0f4f48",
         backgroundImage: `
           radial-gradient(circle at center, rgba(45,212,191,0.08), transparent 45%),
@@ -55,12 +55,12 @@ function AboutSection() {
         backgroundPosition: "center, center, center center",
       }}
     >
-      {/* Subtle Glow Accent behind Cards */}
+      {/* Glow Accent behind Cards */}
       <Box
         sx={{
           position: "absolute",
-          width: "600px",
-          height: "350px",
+          width: { xs: "300px", md: "600px" },
+          height: { xs: "200px", md: "350px" },
           borderRadius: "50%",
           background: "radial-gradient(circle, rgba(94,234,212,0.08) 0%, transparent 70%)",
           top: "50%",
@@ -68,29 +68,27 @@ function AboutSection() {
           transform: "translate(-50%, -50%)",
           zIndex: 0,
           pointerEvents: "none",
-          
         }}
       />
 
       <Container maxWidth="xl" sx={{ position: "relative", zIndex: 1 }}>
         {/* Section Heading Structure */}
-        <Stack alignItems="center" spacing={1} sx={{ mb: 8, textAlign: "center" }}>
+        <Stack alignItems="center" spacing={1} sx={{ mb: { xs: 4, md: 6 }, textAlign: "center" }}>
           <Typography
             data-aos="fade-up"
             sx={{
               color: "#5eead4",
-              fontWeight: 700,
-              fontSize: { xs: "2.4rem", md: "2.4rem" },
-              letterSpacing: "4px",
+              fontWeight: 800,
+              fontSize: { xs: "1.6rem", md: "2.4rem" },
+              letterSpacing: { xs: "3px", md: "5px" },
               textTransform: "uppercase",
             }}
           >
             About Us
           </Typography>
-         
         </Stack>
 
-        <Grid container spacing={5} alignItems="stretch">
+        <Grid container spacing={{ xs: 3, md: 5 }} alignItems="stretch" justifyContent="center">
           {/* PRIMARY CARD: FOUNDER & MANAGING DIRECTOR PROFILE */}
           <Grid item xs={12} md={6} data-aos="fade-right" data-aos-delay="100">
             <Card
@@ -99,14 +97,13 @@ function AboutSection() {
                 display: "flex",
                 flexDirection: "column",
                 borderRadius: "24px",
-                p: "1.0px",
+                p: "1px",
                 background: "linear-gradient(135deg, rgba(94,234,212,0.4), rgba(255,255,255,0.05) 40%, rgba(20,184,166,0.25))",
                 boxShadow: "0 24px 50px rgba(0,0,0,0.3)",
-                transition: "transform 0.6s cubic-bezier(0.22,1,0.36,1), box-shadow 0.6s ease",
+                transition: "transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s ease",
                 "&:hover": {
-                  transform: "translateY(-6px)",
+                  transform: { md: "translateY(-6px)" },
                   boxShadow: "0 32px 64px rgba(0,0,0,0.4)",
-                  borderColor: "rgba(94,234,212,0.5)",
                 },
               }}
             >
@@ -124,13 +121,13 @@ function AboutSection() {
                 }}
               >
                 <Grid container spacing={3} alignItems="center">
-                  {/* Scaled Down Executive Image Frame */}
-                  <Grid item xs={12} sm={3.5} sx={{ display: "flex", justifyContent: { xs: "center", sm: "flex-start" } }}>
+                  {/* Executive Image Frame */}
+                  <Grid item xs={12} sm={3.5} sx={{ display: "flex", justifyContent: "center" }}>
                     <Box
                       sx={{
                         position: "relative",
-                        width: "110px",
-                        height: "110px",
+                        width: { xs: "100px", sm: "110px" },
+                        height: { xs: "100px", sm: "110px" },
                         borderRadius: "50%",
                         overflow: "hidden",
                         border: "2px solid rgba(94,234,212,0.4)",
@@ -160,7 +157,7 @@ function AboutSection() {
                       sx={{
                         color: "#5eead4",
                         fontWeight: 700,
-                        fontSize: "0.85rem",
+                        fontSize: "0.8rem",
                         letterSpacing: "2px",
                         textTransform: "uppercase",
                         mb: 0.5,
@@ -172,7 +169,7 @@ function AboutSection() {
                     <Typography
                       sx={{
                         color: "white",
-                        fontSize: "2rem",
+                        fontSize: { xs: "1.75rem", sm: "2rem" },
                         fontWeight: 800,
                         letterSpacing: "-0.5px",
                       }}
@@ -183,63 +180,60 @@ function AboutSection() {
                     <Typography
                       sx={{
                         color: "rgba(255,255,255,0.72)",
-                        fontSize: "0.95rem",
+                        fontSize: "0.9rem",
                         fontWeight: 600,
-                        mt: 1,
+                        mt: 0.5,
                       }}
                     >
                       DCE & DHCP Approved Professional
                     </Typography>
 
-                    <Stack
-                      direction="row"
-                      alignItems="center"
-                      spacing={1}
-                      sx={{ mt: 2, justifyContent: { xs: "center", sm: "flex-start" } }}
-                    >
-                      <ArchitectureRoundedIcon sx={{ color: "#5eead4", fontSize: "1.2rem" }} />
-                      <Typography sx={{ color: "white", fontSize: "0.95rem", fontWeight: 700 }}>
-                        35+ Years of Construction Excellence
-                      </Typography>
-                    </Stack>
-                    <Stack
-                      direction="row"
-                      alignItems="center"
-                      spacing={1}
-                      sx={{ mt: 2, justifyContent: { xs: "center", sm: "flex-start" } }}
-                    >
-                      <ArchitectureRoundedIcon sx={{ color: "#5eead4", fontSize: "1.2rem" }} />
-                      <Typography sx={{ color: "white", fontSize: "0.95rem", fontWeight: 700 }}>
-                        Serving Clients Across Tamil Nadu
-                      </Typography>
+                    <Stack spacing={1.5} sx={{ mt: 2.5 }}>
+                      {[
+                        "35+ Years of Construction Excellence",
+                        "Serving Clients Across Tamil Nadu",
+                        "100+ Projects Delivered"
+                      ].map((info, idx) => (
+                        <Stack
+                          key={idx}
+                          direction="row"
+                          alignItems="center"
+                          spacing={1.5}
+                          sx={{ justifyContent: { xs: "center", sm: "flex-start" } }}
+                        >
+                          <ArchitectureRoundedIcon sx={{ color: "#5eead4", fontSize: "1.1rem" }} />
+                          <Typography sx={{ color: "white", fontSize: "0.9rem", fontWeight: 600 }}>
+                            {info}
+                          </Typography>
+                        </Stack>
+                      ))}
                     </Stack>
 
-                    <Stack
-                      direction="row"
-                      alignItems="center"
-                      spacing={1}
-                      sx={{ mt: 2, justifyContent: { xs: "center", sm: "flex-start" } }}
+                    <Divider sx={{ my: 2.5, borderColor: "rgba(255,255,255,0.1)" }} />
+                    
+                    {/* Fixed Color Contrast Bug here */}
+                    <Typography 
+                      sx={{ 
+                        color: "#5eead4", 
+                        fontSize: "0.9rem", 
+                        fontWeight: 700, 
+                        letterSpacing: "0.5px",
+                        textTransform: "uppercase" 
+                      }}
                     >
-                      <ArchitectureRoundedIcon sx={{ color: "#5eead4", fontSize: "1.2rem" }} />
-                      <Typography sx={{ color: "white", fontSize: "0.95rem", fontWeight: 700 }}>
-                        100+ Projects Delivered
-                      </Typography>
-                    </Stack>
-
-                    <Divider sx={{ my: 3, borderColor: "rgba(255,255,255,0.08)" }} />
-                    <Typography sx={{ color: "#161b1a", fontSize: "1rem", fontWeight: 700 }}>
                       Residential • Commercial • Villas • Renovations
                     </Typography>
                   </Grid>
                 </Grid>
 
-                <Divider sx={{ my: 3, borderColor: "rgba(255,255,255,0.08)" }} />
+                <Divider sx={{ my: 2.5, borderColor: "rgba(255,255,255,0.1)" }} />
 
                 <Typography
                   sx={{
                     color: "rgba(255,255,255,0.78)",
-                    fontSize: "0.95rem",
-                    lineHeight: 1.7,
+                    fontSize: "0.9rem",
+                    lineHeight: 1.6,
+                    textAlign: { xs: "center", sm: "left" }
                   }}
                 >
                   Based in our <strong>Trichy Head Office</strong>, Mr. Raja provides hands-on supervision for residential, commercial, villa, and renovation projects. With a steadfast commitment to quality workmanship, durability, and customer satisfaction, he has successfully delivered trusted construction solutions across <strong>Tamil Nadu</strong>.
@@ -256,14 +250,13 @@ function AboutSection() {
                 display: "flex",
                 flexDirection: "column",
                 borderRadius: "24px",
-                p: "1.5px",
+                p: "1px",
                 background: "linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.03) 50%, rgba(94,234,212,0.15))",
                 boxShadow: "0 24px 50px rgba(0,0,0,0.3)",
-                transition: "transform 0.6s cubic-bezier(0.22,1,0.36,1), box-shadow 0.6s ease",
+                transition: "transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s ease",
                 "&:hover": {
-                  transform: "translateY(-6px)",
+                  transform: { md: "translateY(-6px)" },
                   boxShadow: "0 32px 64px rgba(0,0,0,0.4)",
-                  borderColor: "rgba(94,234,212,0.4)",
                 },
               }}
             >
@@ -280,12 +273,12 @@ function AboutSection() {
                   justifyContent: "space-between",
                 }}
               >
-                <Box>
+                <Box sx={{ textAlign: { xs: "center", sm: "left" } }}>
                   <Typography
                     sx={{
                       color: "#5eead4",
                       fontWeight: 700,
-                      fontSize: "0.85rem",
+                      fontSize: "0.8rem",
                       letterSpacing: "2px",
                       textTransform: "uppercase",
                       mb: 0.5,
@@ -297,10 +290,10 @@ function AboutSection() {
                   <Typography
                     sx={{
                       color: "white",
-                      fontSize: "2rem",
+                      fontSize: { xs: "1.75rem", sm: "2rem" },
                       fontWeight: 800,
                       letterSpacing: "-0.5px",
-                      mb: 2,
+                      mb: 1.5,
                     }}
                   >
                     Dedicated Project Team
@@ -309,7 +302,7 @@ function AboutSection() {
                   <Typography
                     sx={{
                       color: "rgba(255,255,255,0.72)",
-                      fontSize: "0.95rem",
+                      fontSize: "0.9rem",
                       lineHeight: 1.6,
                       mb: 3,
                     }}
@@ -318,20 +311,20 @@ function AboutSection() {
                   </Typography>
                 </Box>
 
-                {/* Specialties Dynamic Checklist Layout */}
-                <Grid container spacing={6}>
+                {/* Specialties Checklist Layout */}
+                <Grid container spacing={2}>
                   {teamSpecialties.map((spec, idx) => (
-                    <Grid item xs={11} sm={5} key={idx}>
+                    <Grid item xs={12} sm={6} key={idx}>
                       <Stack
                         direction="row"
                         alignItems="center"
-                        spacing={1}
+                        spacing={2}
                         sx={{
                           p: 2,
                           borderRadius: "14px",
                           background: "rgba(255,255,255,0.03)",
                           border: "1px solid rgba(255,255,255,0.06)",
-                          transition: "all 0.4s ease",
+                          transition: "all 0.3s ease",
                           "&:hover": {
                             background: "rgba(94,234,212,0.06)",
                             borderColor: "rgba(94,234,212,0.25)",
@@ -353,7 +346,7 @@ function AboutSection() {
                         <Typography
                           sx={{
                             color: "white",
-                            fontSize: "0.95rem",
+                            fontSize: "0.9rem",
                             fontWeight: 600,
                           }}
                         >
@@ -373,38 +366,42 @@ function AboutSection() {
           data-aos="fade-up"
           data-aos-delay="300"
           sx={{
-            mt: 5,
+            mt: { xs: 4, md: 5 },
             borderRadius: "16px",
-            p: { xs: 3, md: 2.5 },
+            p: { xs: 2.5, md: 3 },
             background: "linear-gradient(90deg, rgba(20,184,166,0.05), rgba(255,255,255,0.03), rgba(20,184,166,0.05))",
             backdropFilter: "blur(12px)",
             border: "1px solid rgba(94,234,212,0.15)",
             boxShadow: "0 8px 32px rgba(0,0,0,0.15)"
           }}
         >
-          <Stack
-            direction="row"
-            justifyContent="center"
+          <Grid 
+            container 
+            spacing={{ xs: 2.5, md: 4 }} 
+            justifyContent="center" 
             alignItems="center"
-            flexWrap="wrap"
-            sx={{ gap: { xs: 4.5, md: 10 } }}
           >
             {credibilityHighlights.map((text, idx) => (
-              <Stack direction="row"
-                alignItems="center"
-                spacing={3}
-                key={idx}>
-                <CheckCircleOutlineRoundedIcon
-                  sx={{
-                    color: "#5eead4",
-                    fontSize: "1.4rem"
-                  }} />
-                <Typography sx={{ color: "white", fontWeight: 600, fontSize: "1rem", letterSpacing: "0.5px" }}>
-                  {text}
-                </Typography>
-              </Stack>
+              <Grid item xs={12} sm="auto" key={idx}>
+                <Stack 
+                  direction="row"
+                  alignItems="center"
+                  spacing={1.5}
+                  sx={{ justifyContent: { xs: "center", sm: "flex-start" } }}
+                >
+                  <CheckCircleOutlineRoundedIcon
+                    sx={{
+                      color: "#5eead4",
+                      fontSize: "1.2rem"
+                    }} 
+                  />
+                  <Typography sx={{ color: "white", fontWeight: 600, fontSize: "0.95rem", letterSpacing: "0.5px" }}>
+                    {text}
+                  </Typography>
+                </Stack>
+              </Grid>
             ))}
-          </Stack>
+          </Grid>
         </Box>
       </Container>
     </Box>
