@@ -18,11 +18,9 @@ function Hero() {
       data-aos="fade-up"
       sx={{
         position: "relative",
-        minHeight: "72vh",
-        paddingTop: "70px",
-        paddingBottom: "50px",
-        paddingTop: { xs: "140px", md: "120px" },
-        paddingBottom: { xs: "80px", md: "100px" },
+        // Height adjustments: let content determine layout height without fixed vh constraints
+        py: { xs: 8, md: 10 },
+        pt: { xs: "120px", md: "140px" }, // Ensures adequate breathing room below the navbar
         display: "flex",
         alignItems: "center",
         overflow: "hidden",
@@ -89,10 +87,10 @@ function Hero() {
         <Box
           sx={{
             maxWidth: "820px",
-            textAlign: "left", // Formats a clean desktop layout on mobile devices
+            textAlign: "left",
             display: "flex",
             flexDirection: "column",
-            alignItems: "flex-start" // Left-aligns elements on mobile screens
+            alignItems: "flex-start"
           }}
         >
           {/* SMALL LABEL */}
@@ -153,7 +151,7 @@ function Hero() {
             <Box
               sx={{
                 display: "flex",
-                flexDirection: "row", // Horizontal arrangement format for mobile layout architectures
+                flexDirection: "row",
                 flexWrap: "wrap",
                 gap: { xs: 1.5, md: 3 },
                 width: "100%",
