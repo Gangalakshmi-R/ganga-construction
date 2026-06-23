@@ -18,19 +18,18 @@ function Hero() {
       data-aos="fade-up"
       sx={{
         position: "relative",
-        minHeight: { xs: "auto", md: "92vh" },
-        paddingTop: { xs: "120px", md: "140px" },
+        minHeight: { xs: "85vh", sm: "90vh", md: "92vh" },
+        paddingTop: { xs: "140px", md: "160px" },
         paddingBottom: { xs: "80px", md: "100px" },
         display: "flex",
         alignItems: "center",
         overflow: "hidden",
-        // Responsive background linear gradient for extreme clarity on mobile screens
         backgroundImage: {
           xs: `linear-gradient(
             to bottom,
-            rgba(2,6,23,0.96) 0%,
-            rgba(2,6,23,0.85) 60%,
-            rgba(2,6,23,0.50) 100%
+            rgba(2,6,23,0.94) 0%,
+            rgba(2,6,23,0.80) 50%,
+            rgba(2,6,23,0.88) 100%
           ), url(${houseImage})`,
           md: `linear-gradient(
             to right,
@@ -43,7 +42,7 @@ function Hero() {
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center center",
         backgroundSize: "cover",
-        backgroundAttachment: { xs: "scroll", md: "fixed" }, // Fixed attachments cause lag and layout bugs on mobile devices
+        backgroundAttachment: { xs: "scroll", md: "fixed" },
         isolation: "isolate",
         "@keyframes floatGlow": {
           "0%": {
@@ -65,13 +64,13 @@ function Hero() {
       <Box
         sx={{
           position: "absolute",
-          width: { xs: "320px", md: "650px" },
-          height: { xs: "320px", md: "650px" },
+          width: { xs: "280px", md: "650px" },
+          height: { xs: "280px", md: "650px" },
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(20,184,166,0.25) 0%, rgba(20,184,166,0.08) 45%, transparent 75%)",
-          filter: "blur(50px)",
-          top: "-40px",
-          right: { xs: "-50px", md: "180px" },
+          background: "radial-gradient(circle, rgba(20,184,166,0.22) 0%, rgba(20,184,166,0.05) 45%, transparent 75%)",
+          filter: "blur(40px)",
+          top: "-20px",
+          right: { xs: "-40px", md: "180px" },
           zIndex: 1,
           animation: "floatGlow 7s ease-in-out infinite alternate",
           pointerEvents: "none",
@@ -88,10 +87,10 @@ function Hero() {
         <Box
           sx={{
             maxWidth: "820px",
-            textAlign: { xs: "center", md: "left" },
+            textAlign: "left", // Formats a clean desktop layout on mobile devices
             display: "flex",
             flexDirection: "column",
-            alignItems: { xs: "center", md: "flex-start" }
+            alignItems: "flex-start" // Left-aligns elements on mobile screens
           }}
         >
           {/* SMALL LABEL */}
@@ -101,9 +100,9 @@ function Hero() {
                 color: "#2dd4bf",
                 letterSpacing: { xs: "2px", md: "3px" },
                 fontWeight: 700,
-                fontSize: { xs: "0.8rem", md: "0.92rem" },
+                fontSize: { xs: "0.75rem", md: "0.92rem" },
                 textTransform: "uppercase",
-                mb: { xs: 2, md: 3 },
+                mb: { xs: 1.5, md: 3 },
                 opacity: 0.92,
               }}
             >
@@ -117,11 +116,11 @@ function Hero() {
               sx={{
                 color: "white",
                 fontWeight: 800,
-                lineHeight: { xs: 1.2, md: 1.1 },
+                lineHeight: { xs: 1.25, md: 1.1 },
                 letterSpacing: "-0.5px",
-                fontSize: { xs: "2.25rem", sm: "3rem", md: "4.2rem" },
+                fontSize: { xs: "1.9rem", sm: "2.8rem", md: "4.2rem" },
                 maxWidth: "940px",
-                mb: { xs: 3, md: 5 },
+                mb: { xs: 2.5, md: 5 },
                 textShadow: "0 12px 40px rgba(0,0,0,0.4)",
               }}
             >
@@ -134,9 +133,9 @@ function Hero() {
             <Typography
               sx={{
                 color: "rgba(255,255,255,0.76)",
-                fontSize: { xs: "0.95rem", md: "1.08rem" },
+                fontSize: { xs: "0.9rem", md: "1.08rem" },
                 fontWeight: 400,
-                lineHeight: { xs: 1.7, md: 1.95 },
+                lineHeight: { xs: 1.65, md: 1.95 },
                 letterSpacing: "0.2px",
                 maxWidth: "610px",
                 mb: { xs: 4, md: 6 },
@@ -152,10 +151,11 @@ function Hero() {
             <Box
               sx={{
                 display: "flex",
-                flexDirection: { xs: "column", sm: "row" },
-                gap: { xs: 2, md: 3 },
-                width: { xs: "100%", sm: "auto" },
-                justifyContent: "center",
+                flexDirection: "row", // Horizontal arrangement format for mobile layout architectures
+                flexWrap: "wrap",
+                gap: { xs: 1.5, md: 3 },
+                width: "100%",
+                justifyContent: "flex-start",
                 mt: 1,
               }}
             >
@@ -165,24 +165,23 @@ function Hero() {
                 smooth={true}
                 duration={500}
                 offset={-90}
-                style={{ width: "100%" }}
+                style={{ width: "auto" }}
               >
                 <Button
                   variant="contained"
-                  fullWidth
                   sx={{
                     position: "relative",
                     overflow: "hidden",
                     background: "linear-gradient(135deg,#14b8a6,#0f766e)",
                     backdropFilter: "blur(10px)",
-                    px: { xs: 3, md: 4.5 },
-                    py: { xs: 1.6, md: 1.45 },
-                    borderRadius: "16px",
+                    px: { xs: 2, sm: 3, md: 4.5 },
+                    py: { xs: 1.2, md: 1.45 },
+                    borderRadius: "12px",
                     textTransform: "none",
                     fontWeight: 700,
-                    fontSize: "0.95rem",
+                    fontSize: { xs: "0.85rem", md: "0.95rem" },
                     letterSpacing: "0.3px",
-                    boxShadow: "0 18px 40px rgba(20,184,166,0.30)",
+                    boxShadow: "0 12px 30px rgba(20,184,166,0.25)",
                     transition: "all 0.45s cubic-bezier(0.22,1,0.36,1)",
                     "&:hover": {
                       transform: { md: "translateY(-4px)" },
@@ -214,24 +213,23 @@ function Hero() {
                 smooth={true}
                 duration={500}
                 offset={-90}
-                style={{ width: "100%" }}
+                style={{ width: "auto" }}
               >
                 <Button
                   variant="contained"
-                  fullWidth
                   sx={{
                     position: "relative",
                     overflow: "hidden",
-                    background: "rgba(255,255,255,0.05)",
+                    background: "rgba(255,255,255,0.06)",
                     backdropFilter: "blur(10px)",
-                    border: "1px solid rgba(255,255,255,0.15)",
+                    border: "1px solid rgba(255,255,255,0.12)",
                     color: "white",
-                    px: { xs: 3, md: 4.5 },
-                    py: { xs: 1.6, md: 1.45 },
-                    borderRadius: "16px",
+                    px: { xs: 2, sm: 3, md: 4.5 },
+                    py: { xs: 1.2, md: 1.45 },
+                    borderRadius: "12px",
                     textTransform: "none",
                     fontWeight: 700,
-                    fontSize: "0.95rem",
+                    fontSize: { xs: "0.85rem", md: "0.95rem" },
                     letterSpacing: "0.3px",
                     transition: "all 0.45s cubic-bezier(0.22,1,0.36,1)",
                     "&:hover": {
@@ -255,7 +253,7 @@ function Hero() {
                     },
                   }}
                 >
-                  Get Free Cost Estimate
+                  Get Free Estimate
                 </Button>
               </Link>
             </Box>
