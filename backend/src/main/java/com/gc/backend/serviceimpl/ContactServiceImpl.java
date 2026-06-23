@@ -8,7 +8,6 @@ import com.gc.backend.entity.ContactMessage;
 import com.gc.backend.repository.ContactMessageRepository;
 
 import com.gc.backend.service.ContactService;
-import com.gc.backend.service.EmailService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,8 +23,6 @@ implements ContactService {
     private final
     ContactMessageRepository
         contactMessageRepository;
-
-    private final EmailService emailService;
 
     @Override
 
@@ -58,23 +55,8 @@ implements ContactService {
 
             .build();
 
-       ContactMessage saved =
-    contactMessageRepository
-        .save(contact);
-
-emailService.sendAdminNotification(
-    saved.getName(),
-    saved.getPhone(),
-    saved.getEmail(),
-    saved.getPlace(),
-    saved.getLandDetails()
-);
-
-emailService.sendCustomerConfirmation(
-    saved.getEmail(),
-    saved.getName()
-);
-
-return saved;
+        return
+            contactMessageRepository
+                .save(contact);
     }
 }
