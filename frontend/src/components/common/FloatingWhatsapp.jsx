@@ -1,78 +1,23 @@
-import {
-  Box,
-} from "@mui/material";
-
-import WhatsAppIcon
-from "@mui/icons-material/WhatsApp";
+import { motion } from "framer-motion";
+import { WhatsApp } from "../Icons";
 
 function FloatingWhatsapp() {
-
   return (
-
-    <Box
-      component="a"
-
-      href=
-        "https://wa.me/919943042474"
-
+    <motion.a
+      className="fab"
+      href="https://wa.me/919943042474"
       target="_blank"
-
-      sx={{
-        position:
-          "fixed",
-
-        bottom: 30,
-
-        right: 30,
-
-        width: 50,
-
-        height: 50,
-
-        borderRadius:
-          "50%",
-
-        background:
-          "#25D366",
-
-        display:
-          "flex",
-
-        alignItems:
-          "center",
-
-        justifyContent:
-          "center",
-
-        zIndex: 9999,
-
-        boxShadow:
-          "0 12px 30px rgba(37,211,102,0.4)",
-
-        cursor:
-          "pointer",
-
-        transition:
-          "0.3s ease",
-
-        "&:hover": {
-          transform:
-            "scale(1.1)",
-        },
-      }}
+      rel="noreferrer"
+      aria-label="Chat with Ganga Construction on WhatsApp"
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 1.6, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
     >
-
-      <WhatsAppIcon
-        sx={{
-          color:
-            "white",
-
-          fontSize:
-            "2.2rem",
-        }}
-      />
-
-    </Box>
+      <i>
+        <WhatsApp />
+      </i>
+      <em style={{ fontStyle: "normal" }}>Chat on WhatsApp</em>
+    </motion.a>
   );
 }
 

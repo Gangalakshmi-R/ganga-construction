@@ -1,3 +1,4 @@
+
 package com.gc.backend.controller;
 
 import org.springframework.http.HttpStatus;
@@ -16,16 +17,13 @@ import lombok.RequiredArgsConstructor;
 @CrossOrigin("*")
 public class CostEstimationController {
 
-    private final CostEstimationService
-            costEstimationService;
+    private final CostEstimationService costEstimationService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CostEstimation calculateCost(
-            @Valid @RequestBody
-            CostEstimationRequest request) {
+            @Valid @RequestBody CostEstimationRequest request) {
 
-        return costEstimationService
-                .calculateCost(request);
+        return costEstimationService.calculateCost(request);
     }
 }

@@ -1,3 +1,4 @@
+
 package com.gc.backend.serviceimpl;
 
 import org.springframework.stereotype.Service;
@@ -21,10 +22,13 @@ public class CostEstimationServiceImpl
     private final CostCalculatorUtil
             costCalculatorUtil;
 
+    private final EmailService emailService;
+
     @Override
     public CostEstimation calculateCost(
             CostEstimationRequest request) {
 
+        // Calculate construction cost
         double estimatedCost =
                 costCalculatorUtil.calculateCost(
                         request.getAreaSqft(),
@@ -32,6 +36,7 @@ public class CostEstimationServiceImpl
                         request.getQualityType()
                 );
 
+        // Create estimation record
         CostEstimation estimation =
                 CostEstimation.builder()
                         .fullName(request.getFullName())
@@ -44,7 +49,23 @@ public class CostEstimationServiceImpl
                         .estimatedCost(estimatedCost)
                         .build();
 
-        return costEstimationRepository
-                .save(estimation);
+        // Save estimation to database
+        CostEstimation savedEstimation =
+                costEstimationRepository.save(estimation);
+
+        // Send email notification
+        try {
+            emailService.sendCostEstimationNotification(
+                    request,
+                    savedEstimation
+            );
+        } catch (Exception e) {
+            System.err.println(
+                "Cost estimation email notification failed: "
+                + e.getMessage()
+            );
+        }
+
+        return savedEstimation;
     }
 }

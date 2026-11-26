@@ -1,1117 +1,214 @@
-import {
-  Box,
-  Typography,
-  Container,
-  TextField,
-  Button,
-  Grid,
-  MenuItem,
-  CircularProgress,
-} from "@mui/material";
-
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
 import axios from "axios";
+import CountUpModule from "react-countup";
 
-import VerifiedRoundedIcon from "@mui/icons-material/VerifiedRounded";
-import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
-import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
-import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import EmailRoundedIcon from "@mui/icons-material/EmailRounded";
+// react-countup ships CommonJS; unwrap the default so Vite builds never get a module object.
+const CountUp = CountUpModule.default ?? CountUpModule;
+import { AnimatePresence, motion } from "framer-motion";
+import { useSnackbar } from "notistack";
+import { Reveal, SplitHeading } from "../Reveal";
+import { ArrowUpRight, Check, Phone, WhatsApp } from "../Icons";
 
-// Lead-generation trust signals
-const TRUST_PILLS = [
-  "Free Cost Estimate",
-  "No Hidden Charges",
-  "Expert Consultation",
-  "Response Within 24 Hours",
+const PILLS = [
+  "Free cost estimate",
+  "No hidden charges",
+  "Expert consultation",
+  "Response within 24 hours",
 ];
 
+const BUILDING_TYPES = [
+  ["RESIDENTIAL", "Residential"],
+  ["COMMERCIAL", "Commercial"],
+];
+const QUALITY = [
+  ["STANDARD", "Standard"],
+  ["PREMIUM", "Premium"],
+  ["LUXURY", "Luxury"],
+];
 
-
-
-// Placeholders — update with real business details
-const CONTACT_DETAILS = {
-  callNumber: "+91 XXXXXXXXXX",
-  whatsappNumber: "+91 XXXXXXXXXX",
-  email: "contact@gangaconstruction.com",
-};
+function Segmented({ name, label, options, value, onChange }) {
+  return (
+    <div className="field" role="radiogroup" aria-label={label}>
+      <span className="label">{label}</span>
+      <div className="seg">
+        {options.map(([val, text]) => (
+          <button
+            key={val}
+            type="button"
+            role="radio"
+            aria-checked={value === val}
+            className={value === val ? "on" : ""}
+            onClick={() => onChange({ target: { name, value: val } })}
+          >
+            {value === val && (
+              <motion.i
+                layoutId={`seg-${name}`}
+                className="seg-bg"
+                transition={{ type: "spring", stiffness: 450, damping: 36 }}
+              />
+            )}
+            <span>{text}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function CostEstimatorSection() {
+  const { enqueueSnackbar } = useSnackbar();
 
-  const [formData, setFormData] =
-    useState({
-      fullName: "",
-      phone: "",
-      email: "",
-      buildingType: "RESIDENTIAL",
-      areaSqft: "",
-      floors: 1,
-      qualityType: "STANDARD",
-    });
+  const [formData, setFormData] = useState({
+    fullName: "",
+    phone: "",
+    email: "",
+    buildingType: "RESIDENTIAL",
+    areaSqft: "",
+    floors: 1,
+    qualityType: "STANDARD",
+  });
+  const [estimatedCost, setEstimatedCost] = useState(null);
+  const [lastArea, setLastArea] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const [estimatedCost, setEstimatedCost] =
-    useState(null);
+  // The hero's quick-estimate bar pre-fills this form.
+  useEffect(() => {
+    const onPrefill = (e) => {
+      const { buildingType, areaSqft } = e.detail || {};
+      setFormData((f) => ({
+        ...f,
+        buildingType: buildingType || f.buildingType,
+        areaSqft: areaSqft || f.areaSqft,
+      }));
+    };
+    window.addEventListener("ganga:estimate", onPrefill);
+    return () => window.removeEventListener("ganga:estimate", onPrefill);
+  }, []);
 
-  const [loading, setLoading] =
-    useState(false);
-
-  const handleChange = (e) => {
-
-    setFormData({
-      ...formData,
-      [e.target.name]:
-        e.target.value,
-    });
-  };
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
-
     e.preventDefault();
-
+    setError("");
     try {
-
       setLoading(true);
-
-
       const API = import.meta.env.VITE_API_BASE_URL;
-
-      const response =
-        await axios.post(
-          `${API}/api/cost-estimations`,
-          formData
-        );
-
-      const ratePerSqft =
-        Math.round(
-          estimatedCost / formData.areaSqft
-        );
-
-
-
-      setEstimatedCost(
-        response.data.estimatedCost
-      );
-
-    } catch (error) {
-
-      console.error(error);
-
+      const response = await axios.post(`${API}/api/cost-estimations`, formData);
+      setLastArea(Number(formData.areaSqft) || 0);
+      setEstimatedCost(response.data.estimatedCost);
+    } catch (err) {
+      console.error(err);
+      setError("We could not calculate your estimate. Check your details and try again.");
+      enqueueSnackbar("Estimate failed. Please try again.", { variant: "error" });
     } finally {
-
       setLoading(false);
     }
   };
 
+  const rate = estimatedCost && lastArea ? Math.round(Number(estimatedCost) / lastArea) : null;
+
   return (
-
-    <Box
-      id="cost-estimation"
-
-      data-aos="fade-up"
-
-      sx={{
-        py: {
-          xs: 8,
-          md: 12,
-        },
-
-        position: "relative",
-
-        overflow: "hidden",
-
-        backgroundColor:
-          "#090d16",
-
-        backgroundImage: `
-
-linear-gradient(
-to right,
-rgba(20,184,166,0.08) 1.2px,
-transparent 1.2px
-),
-
-linear-gradient(
-to bottom,
-rgba(20,184,166,0.08) 1.2px,
-transparent 1.2px
-)
-
-`,
-
-        backgroundSize:
-          "42px 42px",
-
-        backgroundPosition:
-          "0 0",
-      }}
-    >
-
-      {/* AMBIENT GLOW */}
-
-      <Box
-        sx={{
-          position: "absolute",
-
-          width: "650px",
-
-          height: "650px",
-
-          borderRadius: "50%",
-
-          background:
-            "radial-gradient(circle, rgba(20,184,166,0.08) 0%, transparent 70%)",
-
-          top: "-220px",
-
-          right: "-120px",
-
-          zIndex: 1,
-
-          filter:
-            "blur(30px)",
-        }}
-      />
-
-      <Container
-        maxWidth="md"
-
-        sx={{
-          position: "relative",
-
-          zIndex: 2,
-        }}
-      >
-
-        {/* TOP SECTION */}
-
-        <Box
-          sx={{
-            textAlign:
-              "center",
-
-            maxWidth:
-              "820px",
-
-            mx: "auto",
-          }}
-        >
-
-          <Typography
-            sx={{
-              color:
-                "#14b8a6",
-
-              letterSpacing:
-                "4px",
-
-              fontWeight:
-                700,
-
-              fontSize: {
-                xs: "2.1rem",
-                md: "2.1rem",
-              },
-
-              mb: 1,
-
-              textTransform:
-                "uppercase",
-            }}
-          >
-            Cost Estimation
-          </Typography>
-
-          <Typography
-            sx={{
-              fontSize: {
-                xs: "2.3rem",
-                md: "1.5rem",
-              },
-
-              fontWeight:
-                700,
-
-              lineHeight:
-                1.2,
-
-              color:
-                "#ffffff",
-
-              mb: 2,
-            }}
-          >
-            Estimate Your Construction Budget Instantly
-          </Typography>
-
-          <Typography
-            sx={{
-              color:
-                "#94a3b8",
-
-              lineHeight:
-                1.8,
-
-              fontSize:
-                "1rem",
-
-              maxWidth:
-                "700px",
-
-              mx: "auto",
-
-              mb: 4,
-            }}
-          >
-            Get an approximate construction budget based on building type,
-            area, floors, and quality preferences. Perfect for planning your
-            dream home, villa, renovation, or commercial project.
-          </Typography>
-
-          {/* TRUST STRIP */}
-
-          <Box
-            sx={{
-              display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              gap: { xs: 1.2, md: 1.6 },
-              mb: 2.5,
-            }}
-          >
-            {TRUST_PILLS.map((point) => (
-              <Box
-                key={point}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 0.7,
-                  px: 2,
-                  py: 0.9,
-                  borderRadius: "999px",
-                  background: "rgba(20,184,166,0.07)",
-                  border: "1px solid rgba(20,184,166,0.25)",
-                  backdropFilter: "blur(10px)",
-                  transition: "all 0.3s ease",
-
-                  "&:hover": {
-                    borderColor: "rgba(20,184,166,0.5)",
-                    boxShadow: "0 0 18px rgba(20,184,166,0.22)",
-                  },
-                }}
-              >
-                <VerifiedRoundedIcon
-                  sx={{ color: "#14b8a6", fontSize: "1.05rem" }}
-                />
-                <Typography
-                  sx={{
-                    color: "#e2e8f0",
-                    fontWeight: 600,
-                    fontSize: "0.85rem",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {point}
-                </Typography>
-              </Box>
+    <section id="cost-estimation" className="sheet sheet-mist">
+      <div className="wrap est-grid">
+        <div className="est-side">
+          <SplitHeading text="Know your building cost before you start." className="h2" />
+          <Reveal delay={0.1}>
+            <p className="lead">
+              Enter your plot details and get an approximate cost in seconds. A site visit confirms
+              the final figure.
+            </p>
+          </Reveal>
+          <ul className="pills">
+            {PILLS.map((p) => (
+              <li key={p}>
+                <Check />
+                {p}
+              </li>
             ))}
-          </Box>
-
-          {/* BUSINESS CREDIBILITY STRIP */}
-
-
-
-        </Box>
-
-        {/* FORM SECTION */}
-
-        <Box
-          sx={{
-            maxWidth:
-              "620px",
-
-            mx: "auto",
-
-            transform:
-              "translateY(30px)",
-
-            animation:
-              "fadeForm 0.8s ease forwards",
-
-            opacity: 0,
-
-            "@keyframes fadeForm": {
-
-              to: {
-                opacity: 1,
-
-                transform:
-                  "translateY(0px)",
-              },
-            },
-          }}
-        >
-
-          <Box
-            component="form"
-
-            onSubmit={handleSubmit}
-
-            sx={{
-              background:
-                "rgba(15,23,42,0.65)",
-
-              backdropFilter:
-                "blur(22px)",
-
-              border:
-                "1px solid rgba(255,255,255,0.08)",
-
-              borderRadius:
-                "30px",
-
-              p: {
-                xs: 4,
-                md: 5,
-              },
-
-              display:
-                "flex",
-
-              flexDirection:
-                "column",
-
-              gap: 3,
-
-              boxShadow:
-                "0 30px 80px rgba(0,0,0,0.45)",
-            }}
-          >
-
-            <TextField
-              fullWidth
-
-              label="Full Name"
-
-              name="fullName"
-
-              value={
-                formData.fullName
-              }
-
-              onChange={
-                handleChange
-              }
-
-              variant="filled"
-
-              sx={inputStylesColorA}
-            />
-
-            <TextField
-              fullWidth
-
-              label="Phone"
-
-              name="phone"
-
-              value={
-                formData.phone
-              }
-
-              onChange={
-                handleChange
-              }
-
-              variant="filled"
-
-              sx={inputStylesColorB}
-            />
-
-            <TextField
-              fullWidth
-
-              label="Email"
-
-              name="email"
-
-              value={
-                formData.email
-              }
-
-              onChange={
-                handleChange
-              }
-
-              variant="filled"
-
-              sx={inputStylesColorA}
-            />
-
-            <TextField
-              select
-
-              fullWidth
-
-              label="Building Type"
-
-              name="buildingType"
-
-              value={
-                formData.buildingType
-              }
-
-              onChange={
-                handleChange
-              }
-
-              variant="filled"
-
-              SelectProps={{
-                MenuProps: {
-                  PaperProps: {
-                    sx:
-                      dropdownStyles,
-                  },
-                },
-              }}
-
-              sx={inputStylesColorB}
-            >
-              <MenuItem value="RESIDENTIAL">
-                Residential
-              </MenuItem>
-
-              <MenuItem value="COMMERCIAL">
-                Commercial
-              </MenuItem>
-
-            </TextField>
-
-            <TextField
-              fullWidth
-
-              label="Area (Sqft)"
-
-              name="areaSqft"
-
-              type="number"
-
-              value={
-                formData.areaSqft
-              }
-
-              onChange={
-                handleChange
-              }
-
-              variant="filled"
-
-              sx={inputStylesColorA}
-            />
-
-            <TextField
-              fullWidth
-
-              label="Floors"
-
-              name="floors"
-
-              type="number"
-
-              value={
-                formData.floors
-              }
-
-              onChange={
-                handleChange
-              }
-
-              variant="filled"
-
-              sx={inputStylesColorB}
-            />
-
-            <TextField
-              select
-
-              fullWidth
-
-              label="Quality"
-
-              name="qualityType"
-
-              value={
-                formData.qualityType
-              }
-
-              onChange={
-                handleChange
-              }
-
-              variant="filled"
-
-              SelectProps={{
-                MenuProps: {
-                  PaperProps: {
-                    sx:
-                      dropdownStyles,
-                  },
-                },
-              }}
-
-              sx={inputStylesColorA}
-            >
-              <MenuItem value="STANDARD">
-                Standard
-              </MenuItem>
-
-              <MenuItem value="PREMIUM">
-                Premium
-              </MenuItem>
-
-              <MenuItem value="LUXURY">
-                Luxury
-              </MenuItem>
-
-            </TextField>
-
-            {/* BUTTON */}
-
-            <Button
-              type="submit"
-
-              variant="contained"
-
-              fullWidth
-
-              disabled={loading}
-
-              sx={{
-                position:
-                  "relative",
-
-                overflow:
-                  "hidden",
-
-                background:
-                  "linear-gradient(135deg,#14b8a6,#0d9488)",
-
-                py: 1.8,
-
-                borderRadius:
-                  "14px",
-
-                fontWeight:
-                  700,
-
-                fontSize:
-                  "1rem",
-
-                textTransform:
-                  "none",
-
-                boxShadow:
-                  "0 10px 30px rgba(20,184,166,0.2)",
-
-                transition:
-                  "all 0.35s ease",
-
-                "&:hover": {
-
-                  transform:
-                    "translateY(-3px)",
-
-                  boxShadow:
-                    "0 18px 40px rgba(20,184,166,0.35)",
-                },
-
-                "&::before": {
-
-                  content: '""',
-
-                  position:
-                    "absolute",
-
-                  top: 0,
-
-                  left: "-120%",
-
-                  width: "100%",
-
-                  height: "100%",
-
-                  background:
-                    "linear-gradient(to right,transparent,rgba(255,255,255,0.22),transparent)",
-
-                  transition:
-                    "0.8s",
-                },
-
-                "&:hover::before": {
-
-                  left: "120%",
-                },
-              }}
-            >
-
-              {loading ? (
-
-                <CircularProgress
-                  size={24}
-
-                  sx={{
-                    color:
-                      "#ffffff",
-                  }}
-                />
-
-              ) : (
-
-                "Calculate Project Cost"
+          </ul>
+        </div>
+
+        <Reveal kind="slide" x={30}>
+          <div className="card">
+            <form className="form" onSubmit={handleSubmit}>
+              <div className="form-2">
+                <div className="field">
+                  <label htmlFor="ce-name">Full name</label>
+                  <input id="ce-name" className="input" name="fullName" value={formData.fullName} onChange={handleChange} required autoComplete="name" />
+                </div>
+                <div className="field">
+                  <label htmlFor="ce-phone">Phone</label>
+                  <input id="ce-phone" className="input" name="phone" type="tel" value={formData.phone} onChange={handleChange} required autoComplete="tel" />
+                </div>
+              </div>
+              <div className="field">
+                <label htmlFor="ce-email">Email</label>
+                <input id="ce-email" className="input" name="email" type="email" value={formData.email} onChange={handleChange} required autoComplete="email" />
+              </div>
+
+              <Segmented name="buildingType" label="Building type" options={BUILDING_TYPES} value={formData.buildingType} onChange={handleChange} />
+
+              <div className="form-2">
+                <div className="field">
+                  <label htmlFor="ce-area">Built-up area (sq.ft)</label>
+                  <input id="ce-area" className="input" name="areaSqft" type="number" min="100" inputMode="numeric" placeholder="e.g. 1500" value={formData.areaSqft} onChange={handleChange} required />
+                </div>
+                <div className="field">
+                  <label htmlFor="ce-floors">Floors</label>
+                  <input id="ce-floors" className="input" name="floors" type="number" min="1" max="20" value={formData.floors} onChange={handleChange} required />
+                </div>
+              </div>
+
+              <Segmented name="qualityType" label="Finish quality" options={QUALITY} value={formData.qualityType} onChange={handleChange} />
+
+              {error && <p className="form-error" role="alert">{error}</p>}
+
+              <div>
+                <button className="btn" type="submit" disabled={loading}>
+                  {loading ? "Calculating…" : "Calculate my estimate"}
+                  <span className="btn-dot">
+                    <ArrowUpRight />
+                  </span>
+                </button>
+              </div>
+            </form>
+
+            <AnimatePresence>
+              {estimatedCost && (
+                <motion.div
+                  className="result on-dark"
+                  initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                  animate={{ opacity: 1, height: "auto", marginTop: 28 }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                  aria-live="polite"
+                >
+                  <small>Your approximate cost</small>
+                  <div className="amount">
+                    <CountUp key={String(estimatedCost) + lastArea} end={Number(estimatedCost)} duration={1.8} formattingFn={(n) => "₹" + n.toLocaleString("en-IN")} />
+                  </div>
+                  {rate && <div className="rate">About ₹{rate.toLocaleString("en-IN")} per sq.ft</div>}
+                  <small>
+                    This is a guide. The final cost depends on your site, design and materials.
+                  </small>
+                  <div className="acts">
+                    <a className="btn btn-light" href="tel:+919943042474">
+                      Talk to us
+                      <span className="btn-dot"><Phone /></span>
+                    </a>
+                    <a className="btn-ghost" href="https://wa.me/919943042474" target="_blank" rel="noreferrer">
+                      <WhatsApp /> WhatsApp
+                    </a>
+                  </div>
+                </motion.div>
               )}
-
-            </Button>
-
-            {/* DISCLAIMER */}
-
-            <Typography
-              sx={{
-                color: "#64748b",
-                fontSize: "0.75rem",
-                textAlign: "center",
-                lineHeight: 1.6,
-              }}
-            >
-              *Estimated cost is indicative and may vary based on design,
-              materials, location, site conditions, and finishing
-              requirements.
-            </Typography>
-
-          </Box>
-
-        </Box>
-
-        {/* DIVIDER */}
-
-        <Box
-          sx={{
-            width: "100%",
-
-            height: "1px",
-
-            background:
-              "linear-gradient(to right,transparent,rgba(20,184,166,0.25),transparent)",
-
-            my: 6,
-          }}
-        />
-
-        {/* RESULT SECTION */}
-
-        {estimatedCost && (
-
-          <Box
-            sx={{
-              textAlign:
-                "center",
-
-              animation:
-                "resultReveal 0.5s ease",
-
-              "@keyframes resultReveal": {
-
-                from: {
-                  opacity: 0,
-
-                  transform:
-                    "translateY(20px) scale(0.96)",
-                },
-
-                to: {
-                  opacity: 1,
-
-                  transform:
-                    "translateY(0px) scale(1)",
-                },
-              },
-            }}
-          >
-
-            <Typography
-              sx={{
-                color:
-                  "#14b8a6",
-
-                letterSpacing:
-                  "3px",
-
-                fontWeight:
-                  700,
-
-                mb: 1,
-
-                textTransform:
-                  "uppercase",
-              }}
-            >
-              Estimated Result
-            </Typography>
-
-            {/* RESULT CARD with subtle glow pulse behind it */}
-
-            <Box
-              sx={{
-                position: "relative",
-                mt: 3,
-                mx: "auto",
-                maxWidth: "420px",
-              }}
-            >
-
-              <Box
-                sx={{
-                  position: "absolute",
-                  inset: "-10px",
-                  borderRadius: "30px",
-                  background:
-                    "radial-gradient(circle, rgba(20,184,166,0.25) 0%, transparent 70%)",
-                  filter: "blur(18px)",
-                  animation: "glowPulse 2.4s ease-in-out infinite",
-                  zIndex: 0,
-
-                  "@keyframes glowPulse": {
-                    "0%, 100%": {
-                      opacity: 0.5,
-                    },
-                    "50%": {
-                      opacity: 1,
-                    },
-                  },
-                }}
-              />
-
-              <Box
-                sx={{
-                  position: "relative",
-                  zIndex: 1,
-
-                  p: 4,
-
-                  borderRadius:
-                    "26px",
-
-                  background:
-                    "rgba(15,23,42,0.82)",
-
-                  border:
-                    "1px solid rgba(20,184,166,0.28)",
-
-                  backdropFilter:
-                    "blur(16px)",
-
-                  boxShadow:
-                    "0 25px 60px rgba(0,0,0,0.45)",
-                }}
-              >
-
-                <Typography
-                  sx={{
-                    color:
-                      "#94a3b8",
-
-                    mb: 1,
-
-                    letterSpacing:
-                      "2px",
-
-                    textTransform:
-                      "uppercase",
-                  }}
-                >
-                  Estimated Cost
-                </Typography>
-
-                <Typography
-                  sx={{
-                    fontSize: "2.6rem",
-                    fontWeight: 800,
-                    color: "#ffffff",
-                    mb: 1,
-                  }}
-                >
-                  ₹
-                  {Number(
-                    estimatedCost
-                  ).toLocaleString()}
-                </Typography>
-
-                <Typography
-                  sx={{
-                    color: "#14b8a6",
-                    fontSize: "1rem",
-                    fontWeight: 600,
-                    mb: 2.5,
-                  }}
-                >
-                  Approximate Rate:
-                  ₹
-                  {Math.round(
-                    estimatedCost /
-                    Number(formData.areaSqft)
-                  ).toLocaleString()}
-                  {" "} / Sq.Ft
-                </Typography>
-
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 0.8,
-                    alignItems: "center",
-                  }}
-                >
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 0.8 }}>
-                    <CheckCircleRoundedIcon
-                      sx={{ color: "#14b8a6", fontSize: "1rem" }}
-                    />
-                    <Typography
-                      sx={{ color: "#94a3b8", fontSize: "0.85rem" }}
-                    >
-                      Approximate Budget Estimate
-                    </Typography>
-                  </Box>
-
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 0.8 }}>
-                    <CheckCircleRoundedIcon
-                      sx={{ color: "#14b8a6", fontSize: "1rem" }}
-                    />
-                    <Typography
-                      sx={{ color: "#94a3b8", fontSize: "0.85rem" }}
-                    >
-                      Based On Current Construction Standards
-                    </Typography>
-                  </Box>
-                </Box>
-
-              </Box>
-
-            </Box>
-
-          </Box>
-
-
-        )}
-        <Box
-          sx={{
-            textAlign: "center",
-            mt: 5,
-            animation: "bounceArrow 2s infinite",
-
-            "@keyframes bounceArrow": {
-              "0%,20%,50%,80%,100%": {
-                transform: "translateY(0)",
-              },
-              "40%": {
-                transform: "translateY(-8px)",
-              },
-              "60%": {
-                transform: "translateY(-4px)",
-              },
-            },
-          }}
-        >
-          <Typography
-            sx={{
-              color: "#ffffff",
-              fontWeight: 700,
-              fontSize: "1.1rem",
-              mb: 1,
-            }}
-          >
-            Ready To Build Your Dream Project?
-          </Typography>
-
-          <Typography
-            sx={{
-              color: "#94a3b8",
-              fontSize: "0.95rem",
-              mb: 1,
-            }}
-          >
-            Scroll Down To Schedule A Free Consultation
-          </Typography>
-
-          <Typography
-            sx={{
-              color: "#14b8a6",
-              fontSize: "2rem",
-              fontWeight: 700,
-            }}
-          >
-            ↓
-          </Typography>
-        </Box>
-      </Container>
-
-    </Box>
+            </AnimatePresence>
+          </div>
+        </Reveal>
+      </div>
+    </section>
   );
 }
-
-/* INPUT STYLE A */
-
-const inputStylesColorA = {
-
-  "& .MuiInputBase-root": {
-
-    background:
-      "rgba(15,23,42,0.45)",
-
-    border:
-      "1px solid rgba(20,184,166,0.15)",
-
-    borderRadius:
-      "12px",
-
-    color:
-      "#e2e8f0",
-
-    transition:
-      "all 0.35s ease",
-
-    "&::before, &::after": {
-      display:
-        "none",
-    },
-
-    "&:hover": {
-
-      transform:
-        "translateY(-2px)",
-    },
-
-    "&.Mui-focused": {
-
-      borderColor:
-        "#14b8a6",
-
-      boxShadow:
-        "0 0 16px rgba(20,184,166,0.2)",
-    },
-  },
-
-  "& .MuiFormLabel-root": {
-    color:
-      "#14b8a6",
-  },
-
-  "& .MuiFormLabel-root.Mui-focused": {
-    color:
-      "#14b8a6 !important",
-  },
-
-  "& .MuiSelect-icon": {
-    color:
-      "#14b8a6",
-  },
-};
-
-/* INPUT STYLE B */
-
-const inputStylesColorB = {
-
-  "& .MuiInputBase-root": {
-
-    background:
-      "rgba(15,23,42,0.45)",
-
-    border:
-      "1px solid rgba(255,255,255,0.1)",
-
-    borderRadius:
-      "12px",
-
-    color:
-      "#ffffff",
-
-    transition:
-      "all 0.35s ease",
-
-    "&::before, &::after": {
-      display:
-        "none",
-    },
-
-    "&:hover": {
-
-      transform:
-        "translateY(-2px)",
-    },
-
-    "&.Mui-focused": {
-
-      borderColor:
-        "#f8fafc",
-
-      boxShadow:
-        "0 0 16px rgba(255,255,255,0.1)",
-    },
-  },
-
-  "& .MuiFormLabel-root": {
-    color:
-      "#94a3b8",
-  },
-
-  "& .MuiFormLabel-root.Mui-focused": {
-    color:
-      "#ffffff !important",
-  },
-
-  "& .MuiSelect-icon": {
-    color:
-      "#94a3b8",
-  },
-};
-
-/* DROPDOWN */
-
-const dropdownStyles = {
-
-  background:
-    "#0f172a !important",
-
-  border:
-    "1px solid rgba(255,255,255,0.08)",
-
-  borderRadius:
-    "12px",
-
-  "& .MuiMenuItem-root": {
-
-    color:
-      "#94a3b8",
-
-    py: 1.5,
-
-    "&:hover": {
-
-      background:
-        "rgba(20,184,166,0.1)",
-
-      color:
-        "#14b8a6",
-    },
-
-    "&.Mui-selected": {
-
-      background:
-        "rgba(20,184,166,0.2)",
-
-      color:
-        "#ffffff",
-    },
-  },
-};
 
 export default CostEstimatorSection;

@@ -1,266 +1,156 @@
-import {
-  Box,
-  Typography,
-  Button,
-  Container,
-} from "@mui/material";
+import { useState } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { SplitHeading } from "../Reveal";
+import { ArrowUpRight, Phone } from "../Icons";
+import { goTo } from "../../layouts/Navbar";
 
-import Reveal from "../../components/Reveal";
-import CountUp from "react-countup";
-import { Link } from "react-scroll";
-
+import archImage from "../../assets/about.png";
 import houseImage from "../../assets/h1.png";
 
+const EASE = [0.22, 1, 0.36, 1];
+
 function Hero() {
+
+  const reduce = useReducedMotion();
+  const { scrollY } = useScroll();
+  const driftCard = useTransform(scrollY, [0, 700], [0, reduce ? 0 : -70]);
+  const driftBadge = useTransform(scrollY, [0, 700], [0, reduce ? 0 : 50]);
+
+  const [quick, setQuick] = useState({ buildingType: "RESIDENTIAL", areaSqft: "" });
+
+  const submitQuick = (e) => {
+    e.preventDefault();
+    window.dispatchEvent(new CustomEvent("ganga:estimate", { detail: quick }));
+    goTo("cost-estimation");
+  };
+
   return (
-    <Box
-      id="home"
-      data-aos="fade-up"
-      sx={{
-        position: "relative",
-        // Height adjustments: let content determine layout height without fixed vh constraints
-        py: { xs: 8, md: 10 },
-        pt: { xs: "120px", md: "140px" }, // Ensures adequate breathing room below the navbar
-        display: "flex",
-        alignItems: "center",
-        overflow: "hidden",
-        backgroundImage: {
-          xs: `linear-gradient(
-            to bottom,
-            rgba(2,6,23,0.94) 0%,
-            rgba(2,6,23,0.80) 50%,
-            rgba(2,6,23,0.88) 100%
-          ), url(${houseImage})`,
-          md: `linear-gradient(
-            to right,
-            rgba(2,6,23,0.92) 15%,
-            rgba(2,6,23,0.72) 50%,
-            rgba(2,6,23,0.30) 82%,
-            rgba(2,6,23,0.08) 100%
-          ), url(${houseImage})`
-        },
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "center center",
-        backgroundSize: "cover",
-        backgroundAttachment: { xs: "scroll", md: "fixed" },
-        isolation: "isolate",
-        "@keyframes floatGlow": {
-          "0%": {
-            transform: "translate3d(0px, 0px, 0px) scale(1)",
-            opacity: 0.7,
-          },
-          "50%": {
-            transform: "translate3d(-20px, 30px, 0px) scale(1.08)",
-            opacity: 1,
-          },
-          "100%": {
-            transform: "translate3d(15px, -15px, 0px) scale(0.96)",
-            opacity: 0.75,
-          },
-        },
-      }}
-    >
-      {/* GRADIENT LIGHT */}
-      <Box
-        sx={{
-          position: "absolute",
-          width: { xs: "280px", md: "650px" },
-          height: { xs: "280px", md: "650px" },
-          borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(20,184,166,0.22) 0%, rgba(20,184,166,0.05) 45%, transparent 75%)",
-          filter: "blur(40px)",
-          top: "-20px",
-          right: { xs: "-40px", md: "180px" },
-          zIndex: 1,
-          animation: "floatGlow 7s ease-in-out infinite alternate",
-          pointerEvents: "none",
-        }}
-      />
+    <section id="home" className="hero">
+      <div className="wrap hero-grid">
+        <div>
+          <SplitHeading
+            as="h1"
+            className="h1"
+            text="From the first blueprint to the final landmark."
+            immediate
+            delay={0.15}
+          />
 
-      <Container
-        maxWidth="xl"
-        sx={{
-          position: "relative",
-          zIndex: 2,
-        }}
-      >
-        <Box
-          sx={{
-            maxWidth: "820px",
-            textAlign: "left",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start"
-          }}
-        >
-          {/* SMALL LABEL */}
-          <Reveal delay={0.1}>
-            <Typography
-              sx={{
-                color: "#2dd4bf",
-                letterSpacing: { xs: "2px", md: "3px" },
-                fontWeight: 700,
-                fontSize: { xs: "0.75rem", md: "0.92rem" },
-                textTransform: "uppercase",
-                mb: { xs: 1.5, md: 3 },
-                opacity: 0.92,
-              }}
-            >
-              Crafting Elegance, Block by Block
-            </Typography>
-          </Reveal>
+          <motion.p
+            className="lead"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.8, ease: EASE }}
+          >
+            We build homes, villas, commercial spaces and renovations across Tamil Nadu, with hands-on
+            supervision from our Trichy head office.
+          </motion.p>
 
-          {/* MAIN HEADING */}
-          <Reveal delay={0.2}>
-            <Typography
-              sx={{
-                color: "white",
-                fontWeight: 800,
-                lineHeight: { xs: 1.25, md: 1.1 },
-                letterSpacing: "-0.5px",
-                fontSize: { xs: "1.9rem", sm: "2.8rem", md: "4.2rem" },
-                maxWidth: "940px",
-                mb: { xs: 2.5, md: 5 },
-                textShadow: "0 12px 40px rgba(0,0,0,0.4)",
-              }}
-            >
-              From the First Blueprint to the Final Landmark
-            </Typography>
-          </Reveal>
+          <motion.div
+            className="hero-actions"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.75, duration: 0.8, ease: EASE }}
+          >
+            <button className="btn" onClick={() => goTo("projects")}>
+              See our projects
+              <span className="btn-dot">
+                <ArrowUpRight />
+              </span>
+            </button>
+            <a className="btn-ghost" href="tel:+919943042474">
+              <Phone /> Call +91 99430 42474
+            </a>
+          </motion.div>
 
-          {/* DESCRIPTION */}
-          <Reveal delay={0.3}>
-            <Typography
-              sx={{
-                color: "rgba(255,255,255,0.76)",
-                fontSize: { xs: "0.9rem", md: "1.08rem" },
-                fontWeight: 400,
-                lineHeight: { xs: 1.65, md: 1.95 },
-                letterSpacing: "0.2px",
-                maxWidth: "610px",
-                mb: { xs: 4, md: 6 },
-              }}
-            >
-              Building quality homes, villas, commercial spaces, and renovation projects across Tamil
-              Nadu with expert craftsmanship, reliable execution, and lasting value.
-            </Typography>
-          </Reveal>
-
-          {/* BUTTONS */}
-          <Reveal delay={0.4}>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                gap: { xs: 1.5, md: 3 },
-                width: "100%",
-                justifyContent: "flex-start",
-                mt: 1,
-              }}
-            >
-              {/* EXPLORE PROJECTS */}
-              <Link
-                to="projects"
-                smooth={true}
-                duration={500}
-                offset={-90}
-                style={{ width: "auto" }}
+          <motion.form
+            className="quick"
+            onSubmit={submitQuick}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9, duration: 0.8, ease: EASE }}
+            aria-label="Quick cost estimate"
+          >
+            <label>
+              <span>I want to build</span>
+              <select
+                value={quick.buildingType}
+                onChange={(e) => setQuick({ ...quick, buildingType: e.target.value })}
               >
-                <Button
-                  variant="contained"
-                  sx={{
-                    position: "relative",
-                    overflow: "hidden",
-                    background: "linear-gradient(135deg,#14b8a6,#0f766e)",
-                    backdropFilter: "blur(10px)",
-                    px: { xs: 2, sm: 3, md: 4.5 },
-                    py: { xs: 1.2, md: 1.45 },
-                    borderRadius: "12px",
-                    textTransform: "none",
-                    fontWeight: 700,
-                    fontSize: { xs: "0.85rem", md: "0.95rem" },
-                    letterSpacing: "0.3px",
-                    boxShadow: "0 12px 30px rgba(20,184,166,0.25)",
-                    transition: "all 0.45s cubic-bezier(0.22,1,0.36,1)",
-                    "&:hover": {
-                      transform: { md: "translateY(-4px)" },
-                      boxShadow: "0 24px 55px rgba(20,184,166,0.42)",
-                      background: "linear-gradient(135deg,#2dd4bf,#0f766e)",
-                    },
-                    "&::before": {
-                      content: '""',
-                      position: "absolute",
-                      top: 0,
-                      left: "-120%",
-                      width: "100%",
-                      height: "100%",
-                      background: "linear-gradient(to right,transparent,rgba(255,255,255,0.22),transparent)",
-                      transition: "0.8s",
-                    },
-                    "&:hover::before": {
-                      left: "120%",
-                    },
-                  }}
-                >
-                  View Completed Projects
-                </Button>
-              </Link>
+                <option value="RESIDENTIAL">A home</option>
+                <option value="COMMERCIAL">A commercial space</option>
+              </select>
+            </label>
+            <label>
+              <span>Built-up area (sq.ft)</span>
+              <input
+                type="number"
+                min="100"
+                inputMode="numeric"
+                placeholder="e.g. 1500"
+                value={quick.areaSqft}
+                onChange={(e) => setQuick({ ...quick, areaSqft: e.target.value })}
+              />
+            </label>
+            <button className="btn" type="submit">
+              Get estimate
+              <span className="btn-dot">
+                <ArrowUpRight />
+              </span>
+            </button>
+          </motion.form>
+        </div>
 
-              {/* COST ESTIMATION */}
-              <Link
-                to="cost-estimation"
-                smooth={true}
-                duration={500}
-                offset={-90}
-                style={{ width: "auto" }}
-              >
-                <Button
-                  variant="contained"
-                  sx={{
-                    position: "relative",
-                    overflow: "hidden",
-                    background: "rgba(255,255,255,0.06)",
-                    backdropFilter: "blur(10px)",
-                    border: "1px solid rgba(255,255,255,0.12)",
-                    color: "white",
-                    px: { xs: 2, sm: 3, md: 4.5 },
-                    py: { xs: 1.2, md: 1.45 },
-                    borderRadius: "12px",
-                    textTransform: "none",
-                    fontWeight: 700,
-                    fontSize: { xs: "0.85rem", md: "0.95rem" },
-                    letterSpacing: "0.3px",
-                    transition: "all 0.45s cubic-bezier(0.22,1,0.36,1)",
-                    "&:hover": {
-                      transform: { md: "translateY(-4px)" },
-                      background: "rgba(255,255,255,0.14)",
-                      border: "1px solid rgba(255,255,255,0.24)",
-                      boxShadow: "0 18px 45px rgba(255,255,255,0.08)",
-                    },
-                    "&::before": {
-                      content: '""',
-                      position: "absolute",
-                      top: 0,
-                      left: "-120%",
-                      width: "100%",
-                      height: "100%",
-                      background: "linear-gradient(to right,transparent,rgba(255,255,255,0.18),transparent)",
-                      transition: "0.8s",
-                    },
-                    "&:hover::before": {
-                      left: "120%",
-                    },
-                  }}
-                >
-                  Get Free Estimate
-                </Button>
-              </Link>
-            </Box>
-          </Reveal>
-        </Box>
-      </Container>
-    </Box>
+        <div className="hero-art">
+          <motion.div
+            className="arch-ring"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.6, duration: 1.2, ease: EASE }}
+            aria-hidden="true"
+          />
+          <motion.div
+            className="arch"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.9, ease: EASE }}
+          >
+            <motion.img
+              src={archImage}
+              alt="A modern two-storey house built by Ganga Construction, lit at dusk"
+              initial={{ scale: 1.08 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.2, duration: 1.4, ease: EASE }}
+            />
+          </motion.div>
+
+          <motion.div
+            className="hero-card"
+            style={{ y: driftCard }}
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.9, duration: 0.8, ease: EASE }}
+          >
+            <img src={houseImage} alt="Teal and white villa with a balcony and open porch" />
+          </motion.div>
+
+          <motion.div
+            className="hero-badge"
+            style={{ y: driftBadge }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 1.1, duration: 0.7, ease: EASE }}
+          >
+            <b>35+</b>
+            <span>
+              years building
+              <br />
+              across Tamil Nadu
+            </span>
+          </motion.div>
+        </div>
+      </div>
+    </section>
   );
 }
 
