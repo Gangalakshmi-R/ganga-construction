@@ -13,7 +13,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class EmailService {
 
     private final JavaMailSender mailSender;
@@ -23,6 +22,10 @@ public class EmailService {
 
     @Value("${app.mail.to}")
     private String recipientEmail;
+
+    public EmailService(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
 
     // Send contact enquiry notification
     public void sendContactNotification(ContactRequest request) {
