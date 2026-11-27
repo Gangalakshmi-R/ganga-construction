@@ -39,23 +39,23 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
 
-    @Value("${spring.mail.username:}")
-    private String senderEmail;
+  
+// Gmail sender address
+@Value("${GMAIL_USERNAME:}")
+private String senderEmail;
 
-    // Business inbox that receives all enquiries / estimation requests
-    @Value("${app.mail.to:gangalakshmi1662006@gmail.com}")
-    private String recipientEmail;
+// Business inbox
+@Value("${app.mail.to:gangalakshmi1662006@gmail.com}")
+private String recipientEmail;
 
-    // Brevo (HTTPS email API) - works on hosts that block SMTP (e.g. Render free).
-    // If BREVO_API_KEY is empty, Gmail SMTP is used instead.
-    @Value("${app.mail.brevo.api-key:}")
-    private String brevoApiKey;
+// Brevo API key
+@Value("${BREVO_API_KEY:}")
+private String brevoApiKey;
 
-    // Must be a sender verified in Brevo
-    @Value("${app.mail.brevo.sender:gangalakshmi1662006@gmail.com}")
-    private String brevoSender;
+// Verified Brevo sender address
+@Value("${BREVO_SENDER_EMAIL:}")
+private String brevoSender;
 
-    // Shown to customers in confirmation emails
     @Value("${app.company.phone:}")
     private String companyPhone;
 
