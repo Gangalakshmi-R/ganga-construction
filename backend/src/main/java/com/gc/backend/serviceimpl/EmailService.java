@@ -2,7 +2,9 @@ package com.gc.backend.serviceimpl;
 
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.util.HtmlUtils;
 
 import com.gc.backend.dto.request.ContactRequest;
@@ -39,8 +42,18 @@ public class EmailService {
     @Value("${spring.mail.username:}")
     private String senderEmail;
 
+    // Business inbox that receives all enquiries / estimation requests
     @Value("${app.mail.to:gangalakshmi1662006@gmail.com}")
     private String recipientEmail;
+
+    // Brevo (HTTPS email API) - works on hosts that block SMTP (e.g. Render free).
+    // If BREVO_API_KEY is empty, Gmail SMTP is used instead.
+    @Value("${app.mail.brevo.api-key:}")
+    private String brevoApiKey;
+
+    // Must be a sender verified in Brevo
+    @Value("${app.mail.brevo.sender:gangalakshmi1662006@gmail.com}")
+    private String brevoSender;
 
     // Shown to customers in confirmation emails
     @Value("${app.company.phone:}")
@@ -164,8 +177,45 @@ public class EmailService {
     // ------------------------------------------------------------------
 
     private void send(String to, String replyTo, String subject, String html) {
+        if (hasText(brevoApiKey)) {
+            sendViaBrevo(to, replyTo, subject, html);
+        } else {
+            sendViaSmtp(to, replyTo, subject, html);
+        }
+    }
+
+    // Brevo HTTP API (works on free hosting that blocks SMTP)
+    private void sendViaBrevo(String to, String replyTo, String subject, String html) {
+        try {
+            Map<String, Object> body = new java.util.HashMap<>();
+            body.put("sender", Map.of("name", COMPANY, "email", brevoSender));
+            body.put("to", List.of(Map.of("email", to)));
+            if (hasText(replyTo)) {
+                body.put("replyTo", Map.of("email", replyTo));
+            }
+            body.put("subject", subject);
+            body.put("htmlContent", html);
+
+            RestClient.create()
+                .post()
+                .uri("https://api.brevo.com/v3/smtp/email")
+                .header("api-key", brevoApiKey)
+                .header("accept", "application/json")
+                .header("content-type", "application/json")
+                .body(body)
+                .retrieve()
+                .toBodilessEntity();
+
+            log.info("Email sent (Brevo): '{}'", subject);
+        } catch (Exception e) {
+            log.error("Email failed (Brevo): '{}' - {}", subject, e.getMessage());
+        }
+    }
+
+    // Gmail SMTP fallback (blocked on Render free plan)
+    private void sendViaSmtp(String to, String replyTo, String subject, String html) {
         if (!hasText(senderEmail)) {
-            log.warn("Email skipped (GMAIL_USERNAME not configured): '{}'", subject);
+            log.warn("Email skipped (no BREVO_API_KEY or GMAIL_USERNAME configured): '{}'", subject);
             return;
         }
         try {
@@ -182,9 +232,9 @@ public class EmailService {
             helper.setText(html, true);
 
             mailSender.send(message);
-            log.info("Email sent: '{}'", subject);
+            log.info("Email sent (SMTP): '{}'", subject);
         } catch (Exception e) {
-            log.error("Email failed: '{}' - {}", subject, e.getMessage());
+            log.error("Email failed (SMTP): '{}' - {}", subject, e.getMessage());
         }
     }
 
