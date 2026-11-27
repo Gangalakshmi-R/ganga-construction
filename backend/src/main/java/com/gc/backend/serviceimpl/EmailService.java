@@ -56,9 +56,8 @@ private String recipientEmail;
 private String brevoApiKey;
 
 // Verified Brevo sender address
-@Value("${app.mail.brevo.sender:}")
+@Value("${BREVO_SENDER_EMAIL:}")
 private String brevoSender;
-
     @Value("${app.company.phone:}")
     private String companyPhone;
 
@@ -183,6 +182,7 @@ private String brevoSender;
     private void send(String to, String replyTo, String subject, String html) {
         if (hasText(brevoApiKey)) {
             sendViaBrevo(to, replyTo, subject, html);
+            
         } else {
             sendViaSmtp(to, replyTo, subject, html);
         }
@@ -190,6 +190,11 @@ private String brevoSender;
 
     // Brevo HTTP API (works on free hosting that blocks SMTP)
     private void sendViaBrevo(String to, String replyTo, String subject, String html) {
+
+    if (!hasText(brevoSender)) {
+        log.error("BREVO_SENDER_EMAIL is missing. Cannot send: {}", subject);
+        return;
+    }
         try {
             Map<String, Object> body = new java.util.HashMap<>();
             body.put("sender", Map.of("name", COMPANY, "email", brevoSender));
