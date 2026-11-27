@@ -2,6 +2,10 @@
 import { useEffect, useState } from "react";
 
 function CursorGlow() {
+  // Touch devices have no pointer to follow: render nothing.
+  const enabled =
+    typeof window !== "undefined" && !window.matchMedia("(hover: none)").matches;
+
   const [position, setPosition] = useState({
     x: -300,
     y: -300,
@@ -25,6 +29,8 @@ function CursorGlow() {
       window.removeEventListener("pointermove", moveCursor);
     };
   }, []);
+
+  if (!enabled) return null;
 
   return (
     <div

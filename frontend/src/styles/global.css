@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600&family=Lato:wght@400;700;900&display=swap");
 /* ==========================================================
    Ganga Construction — midnight violet "blueprint" theme
    Dark purple surfaces, white + lavender type.
@@ -1044,4 +1044,301 @@ textarea.input { height: auto; min-height: 130px; padding: 14px 18px; resize: ve
     justify-content: center;
     width: 100%;
   }
+}
+
+
+/* ==========================================================
+   RESPONSIVE LAYER — mobile · tablet · laptop · desktop · ultra-wide
+   Appended last so it refines (and where needed overrides) the
+   rules above.  Breakpoints used throughout:
+     ≤ 380  small phones      ≤ 480  phones
+     ≤ 640  large phones      ≤ 960  tablets (portrait)
+     ≤ 1060 tablets (landscape) / small laptops (burger menu)
+     ≥ 1600 large desktop     ≥ 2000 ultra-wide / 4K
+   ========================================================== */
+
+/* ---------- global safety ---------- */
+html { -webkit-tap-highlight-color: transparent; }
+body { min-width: 320px; overflow-wrap: break-word; }
+img, svg, video, canvas { max-width: 100%; }
+input, select, textarea { max-width: 100%; }
+
+/* ---------- large screens: let the layout breathe ---------- */
+@media (min-width: 1600px) {
+  :root { --max: 1360px; }
+  .nav-pill { width: min(100%, 1240px); }
+}
+@media (min-width: 2000px) {
+  :root { --max: 1560px; --gutter: 72px; }
+  html { font-size: 112.5%; }
+  .nav-pill { width: min(100%, 1400px); }
+}
+
+/* ---------- hero: full-height only where it makes sense ---------- */
+@media (min-width: 961px) {
+  .hero { min-height: 100vh; min-height: 100svh; }
+}
+
+/* ---------- navbar ---------- */
+.nav {
+  top: max(16px, env(safe-area-inset-top));
+  padding-left: max(16px, env(safe-area-inset-left));
+  padding-right: max(16px, env(safe-area-inset-right));
+}
+.brand { min-width: 0; }
+.brand > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.brand big { font-size: inherit; }
+
+/* tighter links on small laptops so nothing wraps or overflows */
+@media (min-width: 1061px) and (max-width: 1200px) {
+  .nav-pill { gap: 12px; }
+  .nav-links button { padding: 10px 12px; font-size: 0.9rem; }
+}
+
+/* switch to the burger menu earlier: 6 links + CTA do not fit on tablets */
+@media (max-width: 1060px) {
+  .nav-links,
+  .nav-cta { display: none; }
+  .nav-burger { display: grid; }
+}
+
+@media (max-width: 480px) {
+  .nav {
+    top: max(10px, env(safe-area-inset-top));
+    padding-left: max(10px, env(safe-area-inset-left));
+    padding-right: max(10px, env(safe-area-inset-right));
+  }
+  .nav-burger { width: 42px; height: 42px; }
+}
+@media (max-width: 360px) {
+  .brand { font-size: 0.92rem; gap: 8px; }
+  .brand svg { width: 28px; height: 28px; }
+}
+
+/* ---------- full-screen menu ---------- */
+.menu {
+  height: 100vh; height: 100dvh;
+  overflow-y: auto; overscroll-behavior: contain;
+  gap: 32px;
+  padding-top: max(100px, calc(env(safe-area-inset-top) + 84px));
+  padding-bottom: max(40px, calc(env(safe-area-inset-bottom) + 24px));
+  padding-left: max(var(--gutter), env(safe-area-inset-left));
+  padding-right: max(var(--gutter), env(safe-area-inset-right));
+}
+.menu-close {
+  position: fixed;
+  top: max(20px, env(safe-area-inset-top));
+  right: max(20px, env(safe-area-inset-right));
+}
+/* phones held sideways: short screen, so tighten the list */
+@media (max-height: 520px) {
+  .menu { padding-top: 72px; gap: 18px; }
+  .menu ul { gap: 0; }
+  .menu li button { font-size: clamp(1.4rem, 5vh, 2rem); padding: 3px 0; }
+}
+@media (min-width: 700px) and (max-width: 1060px) and (min-height: 521px) {
+  .menu ul { max-width: 640px; }
+}
+
+/* ---------- section rhythm ---------- */
+@media (max-width: 960px) {
+  .sheet { padding: clamp(4.5rem, 9vw, 6.5rem) 0; }
+}
+@media (max-width: 640px) {
+  :root { --r-xl: 28px; --r-lg: 24px; --r-md: 18px; }
+  .sheet { padding: 4.25rem 0; }
+  .sec-head { gap: 16px; margin-bottom: 2rem; }
+  .h2 { font-size: clamp(2rem, 8.6vw, 2.6rem); }
+  .lead { font-size: 1rem; }
+}
+@media (max-width: 380px) {
+  .h2 { font-size: 1.9rem; }
+}
+
+/* ---------- buttons ---------- */
+.btn:active { transform: scale(0.98); }
+@media (max-width: 480px) {
+  .btn { height: 52px; font-size: 0.95rem; padding-left: 22px; }
+  .btn .btn-dot { width: 38px; height: 38px; }
+  .btn-ghost { height: 52px; padding: 0 20px; }
+  .result .acts .btn,
+  .result .acts .btn-ghost { width: 100%; justify-content: space-between; }
+  .result .acts .btn-ghost { justify-content: center; }
+}
+
+/* ---------- hero: laptops & tablets ---------- */
+@media (max-width: 1100px) {
+  .quick { grid-template-columns: 1fr 1fr; border-radius: 32px; }
+  .quick .btn { grid-column: 1 / -1; justify-content: space-between; }
+  .hero-card { width: 170px; left: -28px; }
+  .hero-badge { right: -16px; padding: 14px 18px; }
+}
+@media (min-width: 641px) and (max-width: 960px) {
+  .hero {
+    min-height: auto; align-items: center;
+    padding: 130px 0 clamp(7rem, 12vw, 9rem);
+  }
+  .hero-grid { gap: 3rem; }
+  .quick { grid-template-columns: 1fr 1fr auto; border-radius: 999px; }
+  .quick .btn { grid-column: auto; }
+  .hero-art { width: min(64%, 440px); margin-top: 8px; }
+  .hero-card { width: 170px; left: -34px; }
+  .hero-badge { right: -22px; }
+}
+@media (max-width: 960px) {
+  .hero { min-height: auto; }
+}
+/* phones held sideways */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero { min-height: auto !important; padding: 96px 0 4.5rem !important; }
+}
+
+/* ---------- about ---------- */
+@media (max-width: 900px) {
+  .portrait { max-width: 520px; width: 100%; margin-inline: auto; }
+}
+@media (max-width: 640px) {
+  .portrait-tag { padding: 12px 14px; }
+  .portrait-tag b { font-size: 1.15rem; }
+  .stat { padding: 20px 0 18px; }
+}
+
+/* ---------- services ---------- */
+@media (max-width: 400px) {
+  .svc-btn { padding: 22px 0; gap: 12px; }
+  .svc-plus { width: 34px; height: 34px; }
+  .svc-title { font-size: 1.35rem; }
+}
+
+/* ---------- projects ---------- */
+.proj-track {
+  padding-left: max(var(--gutter), calc((100% - var(--max)) / 2));
+  padding-right: max(var(--gutter), calc((100% - var(--max)) / 2));
+  scroll-padding-left: max(var(--gutter), calc((100% - var(--max)) / 2));
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+@media (min-width: 641px) and (max-width: 1060px) {
+  .proj-card { flex-basis: min(52vw, 400px); }
+}
+@media (max-width: 640px) {
+  .proj-track { gap: 16px; }
+  .proj-card { flex-basis: 84vw; }
+  .proj-meta { padding: 18px; }
+  .proj-meta h3 { font-size: 1.45rem; }
+  .arrow { width: 48px; height: 48px; }
+  .proj-head { align-items: flex-start; }
+}
+.lb-card { max-height: 92vh; max-height: 92dvh; }
+.lb-close {
+  top: max(18px, env(safe-area-inset-top));
+  right: max(18px, env(safe-area-inset-right));
+}
+@media (max-width: 640px) {
+  .lightbox { padding: 14px; padding-top: 72px; align-items: start; }
+  .lb-card { max-height: calc(100dvh - 90px); }
+  .lb-close { width: 46px; height: 46px; top: max(14px, env(safe-area-inset-top)); right: 14px; }
+}
+
+/* ---------- process ---------- */
+@media (max-width: 520px) {
+  .step-n { font-size: 3rem; }
+}
+
+/* ---------- reviews ---------- */
+@media (max-width: 640px) {
+  .quote-box { min-height: 0; gap: 24px; }
+  .quote-mark { width: 40px; height: 40px; }
+  .quote-by { align-items: flex-start; }
+}
+
+/* ---------- estimator & forms ---------- */
+@media (max-width: 480px) {
+  .card { padding: 20px; }
+  .form { gap: 16px; }
+  .form-2 { gap: 16px; }
+  .input { height: 52px; }
+  .result { padding: 20px; margin-top: 22px; }
+  .result .amount {
+    font-size: clamp(1.9rem, 8.5vw, 2.6rem);
+    overflow-wrap: anywhere;
+  }
+}
+.result .amount { overflow-wrap: anywhere; }
+@media (max-width: 400px) {
+  .seg { gap: 4px; padding: 4px; }
+  .seg button { font-size: 0.85rem; padding: 0 4px; min-width: 0; line-height: 1.1; }
+}
+
+/* ---------- contact ---------- */
+.contact-list a > div,
+.contact-list div > div { min-width: 0; }
+.contact-list b,
+.contact-list span { overflow-wrap: anywhere; }
+@media (max-width: 480px) {
+  .contact-list a, .contact-list div { padding: 14px 16px; gap: 12px; }
+  .contact-list .ico { width: 42px; height: 42px; }
+  .sheet-deep .card h3 { font-size: 1.45rem; margin-bottom: 16px; }
+}
+
+/* ---------- footer ---------- */
+.foot-word { font-size: clamp(1.5rem, 7.4vw, 6rem); }
+@media (max-width: 640px) {
+  .foot-grid { gap: 32px 24px; padding-bottom: 40px; }
+  .foot-bottom { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .foot-word { -webkit-text-stroke-width: 1.2px; }
+}
+@media (max-width: 480px) {
+  .foot-grid { grid-template-columns: 1fr; }
+  .foot-about { max-width: none; }
+}
+
+/* ---------- floating WhatsApp button ---------- */
+.fab {
+  right: max(22px, env(safe-area-inset-right));
+  bottom: max(22px, env(safe-area-inset-bottom));
+}
+@media (max-width: 520px) {
+  .fab {
+    right: max(14px, env(safe-area-inset-right));
+    bottom: max(14px, env(safe-area-inset-bottom));
+    padding: 0 7px;
+  }
+}
+
+/* ---------- snackbars: keep clear of the navbar, fit the screen ---------- */
+@media (max-width: 640px) {
+  .notistack-SnackbarContainer {
+    left: 12px !important; right: 12px !important;
+    top: calc(env(safe-area-inset-top, 0px) + 74px) !important;
+    align-items: stretch !important;
+  }
+  .notistack-MuiContent { width: 100%; flex-wrap: nowrap !important; }
+}
+
+/* ---------- touch devices ---------- */
+@media (hover: none), (pointer: coarse) {
+  /* hover states get "stuck" after a tap on phones, so neutralise them */
+  .btn:hover { transform: none; color: #fff; box-shadow: 0 14px 34px -12px rgba(138, 80, 234, 0.75), inset 0 0 0 1px rgba(255,255,255,.14); }
+  .btn:hover::before { transform: translateY(101%); }
+  .btn:hover .btn-dot { transform: none; background: #fff; color: var(--violet-d); }
+  .btn-light:hover { color: var(--night); box-shadow: none; }
+  .btn-light:hover .btn-dot { background: var(--violet); color: #fff; }
+  .btn-ghost:hover { background: transparent; color: #fff; border-color: rgba(255,255,255,.5); }
+  .arrow:hover { background: transparent; color: #fff; transform: none; }
+  .proj-card:hover { transform: none; border-color: var(--line); }
+  .proj-card:hover img, .portrait:hover img { transform: none; }
+  .contact-list a:hover { transform: none; background: radial-gradient(360px circle at 50% 50%, rgba(201,168,255,.0), transparent 60%); border-color: var(--line-dark); }
+  .svc-btn:hover .svc-title { transform: none; color: #fff; }
+  .menu li button:hover { padding-left: 0; color: #fff; }
+
+  /* no hover on touch, so show the "open" affordance permanently */
+  .proj-open { transform: scale(1); opacity: 1; width: 42px; height: 42px; top: 16px; right: 16px; }
+
+  /* comfortable tap targets in the footer */
+  .foot-grid li { margin-bottom: 4px; }
+  .foot-grid a, .foot-grid button { display: inline-block; padding: 7px 0; }
+
+  /* the full-screen film grain is costly to composite on phones */
+  body::after { display: none; }
 }
