@@ -1,80 +1,52 @@
-import { Box } from "@mui/material";
 
-import {
-  useEffect,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
 
 function CursorGlow() {
-
-  const [position, setPosition] =
-    useState({
-      x: 0,
-      y: 0,
-    });
+  const [position, setPosition] = useState({
+    x: -300,
+    y: -300,
+  });
 
   useEffect(() => {
+    if (window.matchMedia("(hover: none)").matches) return;
 
     const moveCursor = (e) => {
-
       setPosition({
         x: e.clientX,
         y: e.clientY,
       });
     };
 
-    window.addEventListener(
-      "mousemove",
-      moveCursor
-    );
+    window.addEventListener("pointermove", moveCursor, {
+      passive: true,
+    });
 
-    return () =>
-      window.removeEventListener(
-        "mousemove",
-        moveCursor
-      );
-
+    return () => {
+      window.removeEventListener("pointermove", moveCursor);
+    };
   }, []);
 
   return (
-
-    <Box
-      sx={{
+    <div
+      aria-hidden="true"
+      style={{
         position: "fixed",
-
-        top: position.y - 120,
-
-        left: position.x - 120,
-
-        width: "240px",
-
-        height: "240px",
-
+        top: 0,
+        left: 0,
+        width: "260px",
+        height: "260px",
         borderRadius: "50%",
-
         pointerEvents: "none",
-
-        zIndex: 9999,
-
+        zIndex: 250,
         background:
-          "radial-gradient(circle, rgba(20,184,166,0.18) 0%, rgba(20,184,166,0.08) 35%, transparent 75%)",
-
+          "radial-gradient(circle, rgba(138,80,234,0.22) 0%, rgba(201,168,255,0.13) 35%, transparent 72%)",
         filter: "blur(35px)",
-
-        transition:
-          "top 0.18s ease-out, left 0.18s ease-out",
-
+        transform: `translate3d(${position.x - 130}px, ${position.y - 130}px, 0)`,
+        transition: "transform 0.12s ease-out",
         mixBlendMode: "screen",
-
-        opacity: 0.9,
-
-        display: {
-          xs: "none",
-          md: "block",
-        },
+        willChange: "transform",
       }}
     />
-
   );
 }
 

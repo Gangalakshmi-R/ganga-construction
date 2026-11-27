@@ -1,6 +1,19 @@
+
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
-import { ArrowUpRight, BrandMark, Close, Menu, Phone } from "../components/Icons";
+import {
+  AnimatePresence,
+  motion,
+  useScroll,
+  useSpring,
+} from "framer-motion";
+
+import {
+  ArrowUpRight,
+  BrandMark,
+  Close,
+  Menu,
+  Phone,
+} from "../components/Icons";
 
 export const NAV_ITEMS = [
   { label: "Home", to: "home" },
@@ -13,9 +26,18 @@ export const NAV_ITEMS = [
 
 export const goTo = (id) => {
   const el = document.getElementById(id);
+
   if (!el) return;
-  const top = id === "home" ? 0 : el.getBoundingClientRect().top + window.scrollY;
-  window.scrollTo({ top, behavior: "smooth" });
+
+  const top =
+    id === "home"
+      ? 0
+      : el.getBoundingClientRect().top + window.scrollY;
+
+  window.scrollTo({
+    top,
+    behavior: "smooth",
+  });
 };
 
 function Navbar() {
@@ -24,101 +46,185 @@ function Navbar() {
   const [active, setActive] = useState("home");
 
   const { scrollYProgress } = useScroll();
-  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 24 });
 
+  const progress = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 24,
+  });
+
+  // Navbar scroll effect
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 30);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 30);
+    };
+
     onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
-  useEffect(() => {
-    const ids = [...NAV_ITEMS.map((n) => n.to), "cost-estimation"];
-    const seen = new Map();
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => seen.set(e.target.id, e.intersectionRatio));
-        let best = null;
-        let bestRatio = 0;
-        seen.forEach((ratio, id) => {
-          if (ratio > bestRatio) {
-            best = id;
-            bestRatio = ratio;
-          }
-        });
-        if (best) setActive(best === "cost-estimation" ? "contact" : best);
-      },
-      { rootMargin: "-35% 0px -45% 0px", threshold: [0, 0.2, 0.5, 0.8, 1] }
-    );
-    ids.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) io.observe(el);
+    window.addEventListener("scroll", onScroll, {
+      passive: true,
     });
-    return () => io.disconnect();
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
+  // Active navigation section detection
+  useEffect(() => {
+    const sectionIds = [
+      ...NAV_ITEMS.map((item) => item.to),
+      "cost-estimation",
+    ];
+
+    const sections = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
+
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleSections = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort(
+            (a, b) =>
+              b.intersectionRatio - a.intersectionRatio
+          );
+
+        if (visibleSections.length > 0) {
+          const currentSection = visibleSections[0].target.id;
+
+          setActive(
+            currentSection === "cost-estimation"
+              ? "contact"
+              : currentSection
+          );
+        }
+      },
+      {
+        rootMargin: "-30% 0px -55% 0px",
+        threshold: [0, 0.1, 0.25, 0.5, 0.75, 1],
+      }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Mobile menu scroll lock
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
+
     return () => {
       document.body.style.overflow = "";
     };
   }, [open]);
 
+  // Navigation click
   const jump = (id) => {
     setOpen(false);
-    setTimeout(() => goTo(id), open ? 350 : 0);
+
+    // Update active state immediately
+    setActive(
+      id === "cost-estimation" ? "contact" : id
+    );
+
+    setTimeout(() => {
+      goTo(id);
+    }, open ? 350 : 0);
   };
 
   return (
     <>
-      <motion.div className="progress" style={{ scaleX: progress }} aria-hidden="true" />
+      {/* Scroll progress */}
+      <motion.div
+        className="progress"
+        style={{ scaleX: progress }}
+        aria-hidden="true"
+      />
 
+      {/* Main navbar */}
       <header className={`nav ${scrolled ? "is-scrolled" : ""}`}>
         <div className="nav-pill">
-          <button className="brand" onClick={() => jump("home")} aria-label="Ganga Construction, back to top">
+
+          {/* Brand */}
+          <button
+            className="brand"
+            onClick={() => jump("home")}
+            aria-label="Ganga Construction, back to top"
+          >
             <BrandMark />
+
             <span>
               <big>Ganga Construction</big>
             </span>
           </button>
 
+          {/* Desktop navigation */}
           <nav aria-label="Main">
             <ul className="nav-links">
-              {NAV_ITEMS.map((item) => (
-                <li key={item.to}>
-                  <button
-                    className={active === item.to ? "is-active" : ""}
-                    aria-current={active === item.to ? "true" : undefined}
-                    onClick={() => jump(item.to)}
-                  >
-                    {active === item.to && (
-                      <motion.i
-                        layoutId="nav-active"
-                        className="active-bg"
-                        transition={{ type: "spring", stiffness: 420, damping: 36 }}
-                      />
-                    )}
-                    <span>{item.label}</span>
-                  </button>
-                </li>
-              ))}
+              {NAV_ITEMS.map((item) => {
+                const isActive = active === item.to;
+
+                return (
+                  <li key={item.to}>
+                    <button
+                      type="button"
+                      className={isActive ? "is-active" : ""}
+                      aria-current={
+                        isActive ? "page" : undefined
+                      }
+                      onClick={() => jump(item.to)}
+                    >
+                      {/* Animated white active background */}
+                      {isActive && (
+                        <motion.i
+                          layoutId="nav-active"
+                          className="active-bg"
+                          aria-hidden="true"
+                          initial={false}
+                          transition={{
+                            type: "spring",
+                            stiffness: 420,
+                            damping: 36,
+                          }}
+                        />
+                      )}
+
+                      <span>{item.label}</span>
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           </nav>
 
-          <button className="btn nav-cta" onClick={() => jump("cost-estimation")}>
+          {/* Estimate button */}
+          <button
+            className="btn nav-cta"
+            onClick={() => jump("cost-estimation")}
+          >
             Get an estimate
+
             <span className="btn-dot">
               <ArrowUpRight />
             </span>
           </button>
 
-          <button className="nav-burger" onClick={() => setOpen(true)} aria-label="Open menu">
+          {/* Mobile menu button */}
+          <button
+            className="nav-burger"
+            onClick={() => setOpen(true)}
+            aria-label="Open menu"
+            aria-expanded={open}
+          >
             <Menu />
           </button>
         </div>
       </header>
 
+      {/* Mobile fullscreen menu */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -131,28 +237,49 @@ function Navbar() {
             aria-modal="true"
             aria-label="Menu"
           >
-            <button className="menu-close" onClick={() => setOpen(false)} aria-label="Close menu">
+            <button
+              className="menu-close"
+              onClick={() => setOpen(false)}
+              aria-label="Close menu"
+            >
               <Close />
             </button>
+
             <ul>
-              {[...NAV_ITEMS, { label: "Cost estimate", to: "cost-estimation" }].map((item, i) => (
+              {[
+                ...NAV_ITEMS,
+                { label: "Cost estimate", to: "cost-estimation" },
+              ].map((item, i) => (
                 <motion.li
                   key={item.to}
                   initial={{ opacity: 0, y: 24 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 + i * 0.04, duration: 0.4 }}
+                  transition={{
+                    delay: 0.1 + i * 0.04,
+                    duration: 0.4,
+                  }}
                 >
-                  <button onClick={() => jump(item.to)}>{item.label}</button>
+                  <button
+                    onClick={() => jump(item.to)}
+                  >
+                    {item.label}
+                  </button>
                 </motion.li>
               ))}
             </ul>
+
             <div className="menu-foot">
-              <a className="btn btn-light" href="tel:+919943042474">
+              <a
+                className="btn btn-light"
+                href="tel:+919943042474"
+              >
                 Call +91 99430 42474
+
                 <span className="btn-dot">
                   <Phone />
                 </span>
               </a>
+
               <span>Trichy, Tamil Nadu</span>
             </div>
           </motion.div>
