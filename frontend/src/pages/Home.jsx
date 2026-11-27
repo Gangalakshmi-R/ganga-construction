@@ -1,3 +1,4 @@
+
 import Hero from "../components/sections/Hero";
 import Marquee from "../components/sections/Marquee";
 import AboutSection from "../components/sections/AboutSection";
@@ -9,19 +10,21 @@ import CostEstimatorSection from "../components/sections/CostEstimatorSection";
 import ContactSection from "../components/sections/ContactSection";
 import FloatingWhatsapp from "../components/common/FloatingWhatsapp";
 
-const Home = () => (
-  <>
-    <Hero />
-    <Marquee />
-    <AboutSection />
-    <ServicesSection />
-    <ProjectsSection />
-    <ProcessSection />
-    <TestimonialsSection />
-    <CostEstimatorSection />
-    <ContactSection />
-    <FloatingWhatsapp />
-  </>
-);
+const Home = () => {
+  return (
+    <>
+      <Hero />
+      <Marquee />
+      <AboutSection />
+      <ServicesSection />
+      <ProjectsSection />
+      <ProcessSection />
+      <TestimonialsSection />
+      <CostEstimatorSection />
+      <ContactSection />
+      <FloatingWhatsapp />
+    </>
+  );
+};
 
 export default Home;

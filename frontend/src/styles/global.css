@@ -873,3 +873,175 @@ textarea.input { height: auto; min-height: 130px; padding: 14px 18px; resize: ve
   .marquee-track, .skeleton, .hero-art::before { animation: none; }
   *, *::before, *::after { transition-duration: .01ms !important; }
 }
+
+/* ==========================================
+   MOBILE HERO SPACING FIX
+   Ganga Construction
+========================================== */
+
+@media (max-width: 640px) {
+
+  /* Compact hero section */
+  .hero {
+    min-height: auto !important;
+    height: auto;
+    padding: 105px 0 55px !important;
+    align-items: center;
+    border-radius: 0 0 28px 28px;
+  }
+
+  /* Stack content neatly */
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    align-items: center;
+    text-align: left;
+  }
+
+  /* Heading */
+  .hero h1 {
+    font-size: clamp(2.35rem, 9vw, 3.4rem);
+    line-height: 1.04;
+    margin-bottom: 16px;
+  }
+
+  /* Description */
+  .hero .lead {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 22px;
+  }
+
+  /* Buttons */
+  .hero-actions {
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .hero-actions .btn,
+  .hero-actions .btn-ghost {
+    height: 46px;
+    font-size: 0.85rem;
+  }
+
+  .hero-actions .btn {
+    padding-left: 18px;
+  }
+
+  .hero-actions .btn .btn-dot {
+    width: 34px;
+    height: 34px;
+  }
+
+  .hero-actions .btn-ghost {
+    padding: 0 16px;
+  }
+
+  /* Quick cost estimation */
+  .quick {
+    grid-template-columns: 1fr;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 20px;
+    padding: 9px;
+    gap: 5px;
+  }
+
+  .quick label {
+    padding: 7px 12px;
+    min-width: 0;
+  }
+
+  .quick label + label::before {
+    display: none;
+  }
+
+  .quick .btn {
+    width: 100%;
+    height: 46px;
+    justify-content: space-between;
+  }
+
+  /* Construction image */
+  .hero-art {
+    width: min(78%, 290px);
+    margin: 8px auto 0 !important;
+  }
+
+  .arch {
+    aspect-ratio: 4 / 4.6;
+  }
+
+  /* Floating project image */
+  .hero-card {
+    width: 112px;
+    left: -15px;
+    bottom: 16px;
+    border-width: 4px;
+    border-radius: 14px;
+  }
+
+  /* Experience badge */
+  .hero-badge {
+    right: -12px;
+    top: 20%;
+    padding: 10px 13px;
+    border-radius: 14px;
+  }
+
+  .hero-badge b {
+    font-size: 1.5rem;
+  }
+
+  .hero-badge span {
+    font-size: 0.7rem;
+  }
+
+  /* Marquee transition */
+  .marquee {
+    padding-top: 52px;
+    padding-bottom: 30px;
+    margin-top: -28px;
+  }
+
+  .marquee-item {
+    font-size: 1.25rem;
+    gap: 22px;
+  }
+}
+
+/* Extra-small phones */
+@media (max-width: 380px) {
+
+  .hero {
+    padding-top: 95px !important;
+    padding-bottom: 45px !important;
+  }
+
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero-grid {
+    gap: 24px;
+  }
+
+  .hero-art {
+    width: 76%;
+  }
+
+  .hero-card {
+    width: 95px;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-actions .btn,
+  .hero-actions .btn-ghost {
+    justify-content: center;
+    width: 100%;
+  }
+}
