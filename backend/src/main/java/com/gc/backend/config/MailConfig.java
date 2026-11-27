@@ -17,22 +17,29 @@ public class MailConfig {
             @Value("${GMAIL_USERNAME}") String username,
             @Value("${GMAIL_APP_PASSWORD}") String password) {
 
-        JavaMailSenderImpl sender = new JavaMailSenderImpl();
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
-        sender.setHost("smtp.gmail.com");
-        sender.setPort(587);
-        sender.setUsername(username);
-        sender.setPassword(password);
+        // Gmail SMTP configuration
+        mailSender.setHost("smtp.gmail.com");
+        mailSender.setPort(587);
+        mailSender.setUsername(username);
+        mailSender.setPassword(password);
+        mailSender.setDefaultEncoding("UTF-8");
 
-        Properties props = sender.getJavaMailProperties();
+        // SMTP properties
+        Properties properties = mailSender.getJavaMailProperties();
 
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.starttls.required", "true");
-        props.put("mail.smtp.connectiontimeout", "10000");
-        props.put("mail.smtp.timeout", "10000");
-        props.put("mail.smtp.writetimeout", "10000");
+        properties.put("mail.transport.protocol", "smtp");
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.starttls.enable", "true");
+        properties.put("mail.smtp.starttls.required", "true");
 
-        return sender;
+        properties.put("mail.smtp.connectiontimeout", "10000");
+        properties.put("mail.smtp.timeout", "10000");
+        properties.put("mail.smtp.writetimeout", "10000");
+
+        properties.put("mail.debug", "false");
+
+        return mailSender;
     }
 }
