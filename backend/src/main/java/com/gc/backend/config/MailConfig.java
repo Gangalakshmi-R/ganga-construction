@@ -14,8 +14,8 @@ public class MailConfig {
 
     @Bean
     public JavaMailSender javaMailSender(
-            @Value("${GMAIL_USERNAME}") String username,
-            @Value("${GMAIL_APP_PASSWORD}") String password) {
+            @Value("${GMAIL_USERNAME:}") String username,
+            @Value("${GMAIL_APP_PASSWORD:}") String password) {
 
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 

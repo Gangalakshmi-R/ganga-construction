@@ -19,6 +19,13 @@ import com.gc.backend.entity.CostEstimation;
 
 import jakarta.mail.internet.MimeMessage;
 
+/**
+ * Sends HTML emails for contact enquiries and cost estimations.
+ *
+ * Every public method is @Async so the API response is never held up by
+ * SMTP, and every failure is caught + logged here (an email problem must
+ * never fail the customer's request).
+ */
 @Service
 public class EmailService {
 
@@ -32,7 +39,7 @@ public class EmailService {
     @Value("${spring.mail.username:}")
     private String senderEmail;
 
-    @Value("${app.mail.to}")
+    @Value("${app.mail.to:gangalakshmi1662006@gmail.com}")
     private String recipientEmail;
 
     // Shown to customers in confirmation emails
@@ -43,7 +50,9 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
-    // ---------------- Contact enquiry ----------------
+    // ------------------------------------------------------------------
+    // Contact enquiry
+    // ------------------------------------------------------------------
 
     @Async
     public void sendContactNotification(ContactRequest request) {
@@ -85,7 +94,9 @@ public class EmailService {
         }
     }
 
-    // ---------------- Cost estimation ----------------
+    // ------------------------------------------------------------------
+    // Cost estimation
+    // ------------------------------------------------------------------
 
     @Async
     public void sendCostEstimationNotification(
@@ -148,7 +159,9 @@ public class EmailService {
         }
     }
 
-    // ---------------- Internals ----------------
+    // ------------------------------------------------------------------
+    // Internals
+    // ------------------------------------------------------------------
 
     private void send(String to, String replyTo, String subject, String html) {
         if (!hasText(senderEmail)) {
