@@ -79,7 +79,7 @@ function Footer() {
         </div>
 
         <div className="foot-bottom">
-          <span>© 2026 Ganga Constructions. All rights reserved.</span>
+          <span>© 2026 Ganga Construction. All rights reserved.</span>
           <span>Founded by Raja L.</span>
         </div>
       </div>
