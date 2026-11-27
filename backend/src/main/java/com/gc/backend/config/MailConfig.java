@@ -12,37 +12,27 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 @Configuration
 public class MailConfig {
 
-    @Value("${spring.mail.host}")
-    private String host;
-
-    @Value("${spring.mail.port:587}")
-    private int port;
-
-    @Value("${spring.mail.username}")
-    private String username;
-
-    @Value("${spring.mail.password}")
-    private String password;
-
     @Bean
-    public JavaMailSender javaMailSender() {
+    public JavaMailSender javaMailSender(
+            @Value("${GMAIL_USERNAME}") String username,
+            @Value("${GMAIL_APP_PASSWORD}") String password) {
 
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        JavaMailSenderImpl sender = new JavaMailSenderImpl();
 
-        mailSender.setHost(host);
-        mailSender.setPort(port);
-        mailSender.setUsername(username);
-        mailSender.setPassword(password);
+        sender.setHost("smtp.gmail.com");
+        sender.setPort(587);
+        sender.setUsername(username);
+        sender.setPassword(password);
 
-        Properties properties = mailSender.getJavaMailProperties();
+        Properties props = sender.getJavaMailProperties();
 
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true");
-        properties.put("mail.smtp.starttls.required", "true");
-        properties.put("mail.smtp.connectiontimeout", "10000");
-        properties.put("mail.smtp.timeout", "10000");
-        properties.put("mail.smtp.writetimeout", "10000");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.starttls.required", "true");
+        props.put("mail.smtp.connectiontimeout", "10000");
+        props.put("mail.smtp.timeout", "10000");
+        props.put("mail.smtp.writetimeout", "10000");
 
-        return mailSender;
+        return sender;
     }
 }
