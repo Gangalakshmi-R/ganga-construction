@@ -121,6 +121,14 @@ function Navbar() {
     };
   }, [open]);
 
+  // Escape closes the mobile menu
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
   // Navigation click
   const jump = (id) => {
     setOpen(false);

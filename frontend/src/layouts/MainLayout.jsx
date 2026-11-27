@@ -39,10 +39,11 @@ const MainLayout = ({ children }) => {
 
   return (
     <>
+      <a className="skip-link" href="#main">Skip to content</a>
       <CursorGlow />
       <Navbar />
 
-      <main>{children}</main>
+      <main id="main" tabIndex={-1}>{children}</main>
 
       <Footer />
     </>

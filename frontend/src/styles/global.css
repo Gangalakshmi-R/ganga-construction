@@ -1,4 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600&family=Lato:wght@400;700;900&display=swap");
 /* ==========================================================
    Ganga Construction — midnight violet "blueprint" theme
    Dark purple surfaces, white + lavender type.
@@ -1341,4 +1340,72 @@ input, select, textarea { max-width: 100%; }
 
   /* the full-screen film grain is costly to composite on phones */
   body::after { display: none; }
+}
+
+
+/* ==========================================================
+   ACCESSIBILITY & READABILITY
+   ========================================================== */
+
+/* skip link: invisible until a keyboard user tabs to it */
+.skip-link {
+  position: fixed; left: 16px; top: -80px; z-index: 400;
+  padding: 12px 20px; border-radius: 999px; background: #fff; color: var(--night);
+  font-weight: 700; transition: top .2s;
+}
+.skip-link:focus { top: max(12px, env(safe-area-inset-top)); }
+main:focus { outline: none; }
+
+/* comfortable reading text: never tiny, never edge-to-edge */
+body { font-size: clamp(1rem, 0.96rem + 0.2vw, 1.125rem); line-height: 1.7; }
+p, li { max-width: 68ch; }
+.quick span { font-size: 0.875rem; }
+.brand small, .stat > span, .who div span, .contact-list span, .foot-bottom { font-size: max(0.9rem, 14px); }
+.chips span, .approved span, .lb-facts span, .proj-cat { font-size: 0.9rem; }
+.proj-meta p { font-size: 1rem; }
+.form-error { font-size: 1rem; }
+
+/* clearer keyboard focus on every control */
+:focus-visible { outline: 3px solid #fff; outline-offset: 3px; box-shadow: 0 0 0 6px rgba(122, 63, 224, .9); }
+.input:focus-visible { box-shadow: 0 0 0 4px rgba(201,168,255,.4); outline-offset: 2px; }
+
+/* minimum 44px touch targets for small controls */
+.nav-burger, .menu-close, .lb-close, .arrow, .rev-nav .arrow { min-width: 44px; min-height: 44px; }
+.svc-btn, .menu li button, .nav-links button { min-height: 44px; }
+
+/* call button: phones only, sits above the WhatsApp button */
+.fab-call { display: none; }
+@media (max-width: 640px) {
+  .fab-call {
+    display: inline-flex;
+    bottom: calc(max(14px, env(safe-area-inset-bottom)) + 66px);
+    right: max(14px, env(safe-area-inset-right));
+    padding: 0 7px;
+  }
+  .fab-call em { display: none; }
+  .fab-call i { background: #1fa355; }
+}
+/* keep the footer's last line clear of the floating buttons on phones */
+@media (max-width: 640px) { .footer { padding-bottom: 96px; } }
+
+/* users who ask for more contrast */
+@media (prefers-contrast: more) {
+  :root { --muted: #ffffff; --line: rgba(255,255,255,.55); --line-dark: rgba(255,255,255,.55); }
+  .input { border-color: #fff; }
+}
+
+/* users who ask for less motion: stop scrolling text and the glow */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; transform: none; flex-wrap: wrap; width: auto; }
+  .progress { display: none; }
+}
+
+/* printing (e.g. saving the estimate): plain light page */
+@media print {
+  body { background: #fff; color: #000; }
+  .nav, .fab, .progress, .menu, body::after { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track .marquee-item:nth-child(2) { display: none; }
+  .marquee-item { flex-wrap: wrap; white-space: normal; row-gap: 8px; }
 }
