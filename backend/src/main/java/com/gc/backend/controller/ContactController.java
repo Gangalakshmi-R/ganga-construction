@@ -1,10 +1,10 @@
-
 package com.gc.backend.controller;
 
 import com.gc.backend.dto.request.ContactRequest;
 import com.gc.backend.entity.ContactMessage;
 import com.gc.backend.service.ContactService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ public class ContactController {
 
     @PostMapping
     public ResponseEntity<ContactMessage> saveContact(
-            @RequestBody ContactRequest dto) {
+            @Valid @RequestBody ContactRequest dto) {
 
         ContactMessage savedContact =
                 contactMessageService.saveContact(dto);

@@ -1,5 +1,6 @@
 package com.gc.backend.dto.request;
 
+import jakarta.validation.constraints.Email;
 import lombok.*;
 
 @Getter
@@ -12,6 +13,7 @@ public class ContactRequest {
 
     private String name;
 
+    @Email
     private String email;
 
     private String phone;
