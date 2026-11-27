@@ -4,6 +4,9 @@ import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -53,7 +56,7 @@ private String recipientEmail;
 private String brevoApiKey;
 
 // Verified Brevo sender address
-@Value("${BREVO_SENDER_EMAIL:}")
+@Value("${app.mail.brevo.sender:}")
 private String brevoSender;
 
     @Value("${app.company.phone:}")
@@ -83,7 +86,8 @@ private String brevoSender;
                     row("Email", request.getEmail()),
                     row("Phone", request.getPhone()),
                     row("Location", request.getPlace()),
-                    row("Land Details", request.getLandDetails())
+                    row("Land Details", request.getLandDetails()),
+                    row("Received At", nowIst())
                 ) +
                 "<p>Please contact the customer.</p>"
             )
@@ -93,7 +97,7 @@ private String brevoSender;
         if (hasText(request.getEmail())) {
             send(
                 request.getEmail(),
-                recipientEmail,
+                null,
                 "We received your enquiry - " + COMPANY,
                 layout(
                     "Thank you for contacting us",
@@ -101,7 +105,7 @@ private String brevoSender;
                     "<p>Thank you for reaching out to " + COMPANY +
                     ". We have received your enquiry and our team " +
                     "will get back to you shortly.</p>" +
-                    contactLine()
+                    contactLine() + noReplyNote()
                 )
             );
         }
@@ -139,7 +143,7 @@ private String brevoSender;
                     row("Quality", str(request.getQualityType()))
                 ) +
                 "<h3>Estimation</h3>" +
-                table(row("Estimated Cost", cost)) +
+                table(row("Estimated Cost", cost), row("Received At", nowIst())) +
                 "<p>Please contact the customer to discuss the project.</p>"
             )
         );
@@ -148,7 +152,7 @@ private String brevoSender;
         if (hasText(request.getEmail())) {
             send(
                 request.getEmail(),
-                recipientEmail,
+                null,
                 "Your construction cost estimate - " + COMPANY,
                 layout(
                     "Your Cost Estimate",
@@ -166,7 +170,7 @@ private String brevoSender;
                     "approximate figure. The final cost depends on site " +
                     "conditions, design and material choices.</p>" +
                     "<p>Our team will contact you to discuss your project.</p>" +
-                    contactLine()
+                    contactLine() + noReplyNote()
                 )
             );
         }
@@ -208,7 +212,10 @@ private String brevoSender;
 
             log.info("Email sent (Brevo): '{}'", subject);
         } catch (Exception e) {
-            log.error("Email failed (Brevo): '{}' - {}", subject, e.getMessage());
+            String detail = (e instanceof org.springframework.web.client.RestClientResponseException r)
+                    ? r.getStatusCode() + " " + r.getResponseBodyAsString()
+                    : e.getMessage();
+            log.error("Email failed (Brevo): '{}' - {}", subject, detail);
         }
     }
 
@@ -262,6 +269,18 @@ private String brevoSender;
                "font-weight:bold;width:35%\">" + esc(label) + "</td>" +
                "<td style=\"padding:6px 8px;border-bottom:1px solid #eee\">" +
                esc(value) + "</td></tr>";
+    }
+
+    private String noReplyNote() {
+        return "<p style=\"color:#888;font-size:12px;border-top:1px solid #eee;" +
+               "padding-top:10px\">This is an automated message from a " +
+               "no-reply address. Please do not reply to this email - " +
+               "replies are not monitored.</p>";
+    }
+
+    private String nowIst() {
+        return ZonedDateTime.now(ZoneId.of("Asia/Kolkata"))
+                .format(DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a")) + " IST";
     }
 
     private String contactLine() {
