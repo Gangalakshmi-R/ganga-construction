@@ -223,10 +223,29 @@ ul { list-style: none; margin: 0; padding: 0; }
 .brand svg { width: 34px; height: 34px; flex: none; }
 .brand small { display: block; font-family: var(--body); font-weight: 500; font-size: .72rem; letter-spacing: 0; color: var(--muted); }
 .nav-links { display: flex; gap: 2px; }
-.nav-links button { position: relative; padding: 10px 16px; border-radius: 999px; font-weight: 500; font-size: .95rem; color: var(--muted); transition: color .3s; }
-.nav-links button:hover { color: #fff; }
-.nav-links button.is-active { color: var(--night); font-weight: 600; }
-.nav-links .active-bg { position: absolute; inset: 0; background: #fff; border-radius: 999px; z-index: -1; box-shadow: 0 6px 20px -6px rgba(201,168,255,.7); }
+.nav-links button {
+  position: relative;
+  isolation: isolate;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: .95rem;
+  color: var(--muted);
+  transition: color .3s;
+}.nav-links button:hover { color: #fff; }
+.nav-links button.is-active {
+  color: var(--night);
+  font-weight: 600;
+}
+
+.nav-links .active-bg {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  border-radius: 999px;
+  z-index: -1;
+  box-shadow: 0 6px 20px -6px rgba(201,168,255,.7);
+}
 .nav-links button span { position: relative; z-index: 1; }
 .nav-cta { height: 46px; padding: 0 6px 0 20px; font-size: .95rem; box-shadow: none; }
 .nav-cta .btn-dot { width: 34px; height: 34px; }
